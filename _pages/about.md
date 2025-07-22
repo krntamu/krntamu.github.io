@@ -4,8 +4,6 @@ title: about
 permalink: /
 subtitle: <a href='#'>Sanchez Chair Professor, Dept. of Electrical and Computer Engineering, Texas A&M University</a>
 
-{% email krn@tamu.edu %}
-
 profile:
   align: right
   image: KRNprofile2.jpg
