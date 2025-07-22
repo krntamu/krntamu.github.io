@@ -449,8 +449,8 @@ ninja.data = [{
           section: "News",},{id: "news-i-co-organized-the-first-connected-intelligence-workshop-at-texas-a-amp-amp-m-university",
           title: 'I co-organized the first Connected Intelligence Workshop at Texas A&amp;amp;amp;M University',
           description: "",
-          section: "News",},{id: "news-new-nsf-project-on-neural-joint-source-channel-coding-machine-learning-ml-techniques-are-demonstrating-record-breaking-performances-on-many-tasks-such-as-speech-recognition-image-recognition-composing-new-documents-and-even-solving-mathematics-olympiad-problems-encouraged-by-these-remarkable-results-machine-learning-based-techniques-are-now-being-researched-to-design-better-communication-systems-an-important-communication-problem-is-the-transmission-of-sources-such-as-speech-images-and-video-over-noisy-communication-networks-to-efficiently-accomplish-this-task-the-source-must-be-compressed-and-encoded-prior-to-transmission-this-project-considers-the-use-of-machine-learning-models-for-joint-compression-and-encoding-of-sources-ie-joint-source-channel-coding-jscc-one-significant-drawback-of-many-existing-designs-of-joint-source-channel-coding-schemes-based-on-machine-learning-techniques-is-that-they-use-an-end-to-end-approach-which-obfuscates-underlying-mechanisms",
-          title: 'New NSF project on Neural Joint-Source Channel Coding Machine learning (ML) techniques are...',
+          section: "News",},{id: "news-new-nsf-project-on-neural-joint-source-channel-coding",
+          title: 'New NSF project on Neural Joint-Source Channel Coding',
           description: "",
           section: "News",},{id: "news-keynote-talk-at-spawc-2025",
           title: 'Keynote talk at SPAWC 2025',
@@ -505,35 +505,35 @@ ninja.data = [{
         title: 'email',
         section: 'Socials',
         handler: () => {
-          window.open("mailto:%79%6F%75@%65%78%61%6D%70%6C%65.%63%6F%6D", "_blank");
+          window.open("mailto:%6B%72%6E@%74%61%6D%75.%65%64%75", "_blank");
         },
       },{
-        id: 'social-inspire',
-        title: 'Inspire HEP',
+        id: 'social-github',
+        title: 'GitHub',
         section: 'Socials',
         handler: () => {
-          window.open("https://inspirehep.net/authors/1010907", "_blank");
+          window.open("https://github.com/krntamu", "_blank");
         },
       },{
-        id: 'social-rss',
-        title: 'RSS Feed',
+        id: 'social-linkedin',
+        title: 'LinkedIn',
         section: 'Socials',
         handler: () => {
-          window.open("/feed.xml", "_blank");
+          window.open("https://www.linkedin.com/in/krishna-narayanan-3237749", "_blank");
+        },
+      },{
+        id: 'social-orcid',
+        title: 'ORCID',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://orcid.org/0000-0001-8742-5332", "_blank");
         },
       },{
         id: 'social-scholar',
         title: 'Google Scholar',
         section: 'Socials',
         handler: () => {
-          window.open("https://scholar.google.com/citations?user=qc6CJjYAAAAJ", "_blank");
-        },
-      },{
-        id: 'social-custom_social',
-        title: 'Custom_social',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://www.alberteinstein.com/", "_blank");
+          window.open("https://scholar.google.com/citations?user=oDivxXQAAAAJ", "_blank");
         },
       },{
       id: 'light-theme',
