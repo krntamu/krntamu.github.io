@@ -3,8 +3,8 @@ const ninja = document.querySelector('ninja-keys');
 
 // add the home and posts menu items
 ninja.data = [{
-    id: "nav-",
-    title: "",
+    id: "nav-about",
+    title: "about",
     section: "Navigation",
     handler: () => {
       window.location.href = "/";
@@ -440,8 +440,14 @@ ninja.data = [{
           description: "",
           section: "Books",handler: () => {
               window.location.href = "/books/the_godfather/";
-            },},{id: "news-new-arl-project-on-resilient-ai-with-network-and-edge-synergism",
+            },},{id: "news-i-delivered-a-keynote-talk-at-the-2024-wocc-conference-in-hsinchu-taiwan",
+          title: 'I delivered a keynote talk at the 2024 WOCC conference in Hsinchu, Taiwan....',
+          description: "",
+          section: "News",},{id: "news-new-arl-project-on-resilient-ai-with-network-and-edge-synergism",
           title: 'New ARL project on Resilient AI with Network and Edge Synergism',
+          description: "",
+          section: "News",},{id: "news-i-co-organized-the-first-connected-intelligence-workshop-at-texas-a-amp-amp-m-university",
+          title: 'I co-organized the first Connected Intelligence Workshop at Texas A&amp;amp;amp;M University',
           description: "",
           section: "News",},{id: "news-new-nsf-project-on-neural-joint-source-channel-coding-machine-learning-ml-techniques-are-demonstrating-record-breaking-performances-on-many-tasks-such-as-speech-recognition-image-recognition-composing-new-documents-and-even-solving-mathematics-olympiad-problems-encouraged-by-these-remarkable-results-machine-learning-based-techniques-are-now-being-researched-to-design-better-communication-systems-an-important-communication-problem-is-the-transmission-of-sources-such-as-speech-images-and-video-over-noisy-communication-networks-to-efficiently-accomplish-this-task-the-source-must-be-compressed-and-encoded-prior-to-transmission-this-project-considers-the-use-of-machine-learning-models-for-joint-compression-and-encoding-of-sources-ie-joint-source-channel-coding-jscc-one-significant-drawback-of-many-existing-designs-of-joint-source-channel-coding-schemes-based-on-machine-learning-techniques-is-that-they-use-an-end-to-end-approach-which-obfuscates-underlying-mechanisms",
           title: 'New NSF project on Neural Joint-Source Channel Coding Machine learning (ML) techniques are...',
