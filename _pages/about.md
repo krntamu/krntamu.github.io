@@ -31,4 +31,4 @@ I am a Professor in the Department of Electrical and Computer Engineering at [Te
 
 My current research interests lie broadly in AI-native wireless networks, AI-enabled compression and joint-source channel coding, coding theory, information theory, and machine learning, with applications in next-generation wireless communications (such as 5G/6G cellular systems and massive machine-type communications) and data storage. I have authored over a hundred peer-reviewed papers in these areas and have held visiting researcher positions at Qualcomm Research and at the Simons Institute for the Theory of Computing at UC Berkeley.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them..
+During Fall 2025, I will be teaching an undergraduate course DAEN 429: Predictive Modeling and ECEN 601: Mathematical Methods in Signal Processing (more or less a Math for Machine Learning course). 
