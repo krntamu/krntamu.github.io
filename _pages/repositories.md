@@ -45,3 +45,20 @@ nav_order: 4
   {% endfor %}
 </div>
 {% endif %}
+
+{% if site.data.repositories.additional_repository_links and site.data.repositories.additional_repository_links.size > 0 %}
+
+## More repositories
+
+<ul class="post-list">
+  {% for link in site.data.repositories.additional_repository_links %}
+    <li>
+      <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<p class="text-muted small mt-2">
+  Stats and pin cards only support GitHub user accounts and public repositories (public API).
+</p>
+{% endif %}
