@@ -1,14 +1,11 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - krntamu
+  - connectedintelligence
 
 repo_description_lines_max: 2
 
 github_repos:
-  - alshedivat/al-folio
-  - jekyll/jekyll
-  - twbs/bootstrap
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - mathjax/MathJax
-  - jpswalsh/academicons
+  - vcskaushik/LLMzip
+  - PJust601/OD-Stega
+  - krntamu/ecen314
+  - krntamu/2025_diffusion_channel_estimation
