@@ -33,4 +33,4 @@ I am the Sanchez Chair Professor and the Associate Department Head for AI in the
 
 My current research interests lie broadly in AI-native wireless networks, AI-enabled compression and joint-source channel coding, coding theory, information theory, and machine learning, with applications in next-generation wireless communications (such as 6G cellular systems and massive machine-type communications) and data storage. I have authored over a hundred peer-reviewed papers in these areas and have held visiting researcher positions at Qualcomm Research and at the Simons Institute for the Theory of Computing at UC Berkeley.
 
-During Fall 2025, I developed and taught undergraduate course DAEN 429: Data Analytics II which mostly covered Modern Deep Learning. During Spring 2026, I am teaching a graduate course on Wireless Communications and a core Undergraduate course on Signals and Systems.
+During Fall 2025, I developed and taught an undergraduate course DAEN 429: Data Analytics II which covered Modern Deep Learning. During Spring 2026, I am teaching a graduate course on Wireless Communications and a core Undergraduate course on Signals and Systems.
