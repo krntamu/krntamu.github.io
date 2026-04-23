@@ -3,7 +3,7 @@ layout: about
 title: about
 permalink: /
 subtitle: |
-  <a href="https://engineering.tamu.edu/electrical/index.html">Sanchez Chair Professor and Associate Department Head for AI, Dept. of Electrical and Computer Engineering, Texas A&amp;M University</a><br>
+  <a href="https://engineering.tamu.edu/electrical/index.html">Sanchez Chair Professor &amp; Associate Department Head for AI, Dept. of Electrical and Computer Engineering, Texas A&amp;M University</a><br>
   <a href="https://tamids.tamu.edu/">Associate Director for Educational Initiatives, Texas A&amp;M Institute of Data Science</a>
 
 profile:
