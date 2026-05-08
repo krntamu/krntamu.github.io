@@ -29,3 +29,8 @@ Key themes include:
 - Entropy estimation for natural language.
 - Connections between language modeling and source coding.
 - Practical tradeoffs among compression ratio, latency, and model size.
+
+## Presentations
+
+- Krishna Narayanan, [Plenary talk at ITA 2026](https://ita.ucsd.edu/workshop/), "Compression and Estimation: Transformers and Classical Problems in Information Theory."
+- Krishna Narayanan, [Revisiting Compression and Communication through the Lens of Generative AI](https://2025.ieeespawc.org/keynotes/).
