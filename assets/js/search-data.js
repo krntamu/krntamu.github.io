@@ -30,15 +30,15 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "nav-cv",
-          title: "cv",
-          description: "",
+        },{id: "nav-curriculum-vitae",
+          title: "Curriculum Vitae",
+          description: "Academic appointments, research, teaching, service, and professional activities.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/cv/";
           },
         },{id: "nav-teaching",
-          title: "teaching",
+          title: "Teaching",
           description: "Courses, lecture notes, and teaching materials.",
           section: "Navigation",
           handler: () => {
