@@ -2,7 +2,7 @@
 layout: page
 title: Neural Joint Source-Channel Coding
 description: End-to-end learned representations for compression and communication
-img: assets/img/7.jpg
+img: 
 importance: 3
 category: work
 related_publications: true
@@ -10,7 +10,9 @@ related_publications: true
 
 Joint source-channel coding revisits a foundational communication problem: instead of compressing data and then separately protecting it against channel noise, can the representation be designed end to end for the source, the channel, and the final task?
 
-This project develops neural and information-theoretic approaches to communication under distortion, perception, and reliability constraints. Neural architectures can learn representations that degrade gracefully, exploit structure in the source, and adapt to operating regimes where classical separation-based designs are not ideal.
+One thrust in this project develops neural and information-theoretic approaches to communication under distortion, perception, and reliability constraints. Neural architectures can learn representations that degrade gracefully, exploit structure in the source, and adapt to operating regimes where classical separation-based designs are not ideal.
+
+Another thrust in the project is to design joint source-channel coding schemes for transmitting short packets of data such as in retransmission acknowledgements when the prior distribution on zeros and ones is not uniform and when Type-I and Type-II errors are weighted differently. 
 
 The research is closely tied to emerging questions in semantic communication and generative compression, where the receiver may care not only about bitwise recovery but also about the perceptual or task-level quality of the reconstruction. Recent work on source-channel separation for distortion-perception coding provides a theoretical lens for understanding when separation remains optimal and when new designs are needed {% cite tian2025source %}.
 

@@ -9,7 +9,7 @@ giscus_comments: true
 related_publications: true
 ---
 
-Future wireless systems will need to adapt to rapidly changing channels, heterogeneous devices, and new traffic patterns created by distributed AI, sensing, robotics, and immersive media. This project studies wireless communication as an AI-native system rather than as a fixed pipeline with isolated learning components.
+Future wireless systems will need to adapt to rapidly changing channels, heterogeneous devices, and new traffic patterns created by distributed AI, sensing, robotics, and immersive media. This project studies the use of modern AI tools for implicit and explicit channel estimation at the physical layer in wireless communications.
 
 **Thrust 1: Transformers as adaptive in-context wireless estimators.** One thrust studies how Transformers and in-context learning can act as estimators for wireless channels and signals. The goal is to understand when sequence models can adapt from examples at inference time, how their behavior relates to classical estimators, and what guarantees can be proved for communication settings {% cite kunde2023transformers %}. 
 
