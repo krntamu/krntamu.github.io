@@ -438,8 +438,8 @@ ninja.data = [{
           description: "Lossless text compression using large language models",
           section: "Projects",handler: () => {
               window.location.href = "/projects/1_project/";
-            },},{id: "projects-ai-native-wireless-communications",
-          title: 'AI-Native Wireless Communications',
+            },},{id: "projects-ai-native-wireless",
+          title: 'AI-Native Wireless',
           description: "Learning-driven models and algorithms for future wireless systems",
           section: "Projects",handler: () => {
               window.location.href = "/projects/2_project/";
@@ -463,9 +463,9 @@ ninja.data = [{
           description: "Analytical and neural codes for channels with feedback",
           section: "Projects",handler: () => {
               window.location.href = "/projects/6_project/";
-            },},{id: "projects-over-the-air-neural-group-testing",
-          title: 'Over-the-Air Neural Group Testing',
-          description: "Learning-based sparse activity detection over wireless channels",
+            },},{id: "projects-connected-intelligence-and-resilient-edge-ai",
+          title: 'Connected Intelligence and Resilient Edge AI',
+          description: "Networked AI systems for next-generation communication, compute, and autonomy",
           section: "Projects",handler: () => {
               window.location.href = "/projects/7_project/";
             },},{id: "projects-over-the-air-federated-learning",
