@@ -1,6 +1,6 @@
 ---
 layout: page
-title: AI-Native Wireless Communications
+title: AI-Native Wireless
 description: Learning-driven models and algorithms for future wireless systems
 img: assets/img/projects/ai-native/cover.png
 importance: 2
