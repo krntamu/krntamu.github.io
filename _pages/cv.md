@@ -27,7 +27,7 @@ _styles: >
     margin-bottom: 0.35rem;
   }
   .cv-section {
-    margin-top: 1.8rem;
+    margin-top: 2rem;
   }
   .cv-list {
     margin-bottom: 0;
@@ -38,8 +38,8 @@ _styles: >
   .cv-card {
     border: 1px solid var(--global-divider-color);
     border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.35rem;
   }
   .cv-card h3 {
     margin-top: 0;
@@ -56,6 +56,10 @@ _styles: >
     display: inline-block;
     margin-right: 0.75rem;
     margin-bottom: 0.35rem;
+  }
+  .post article > details {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
   @media (max-width: 600px) {
     .cv-profile {

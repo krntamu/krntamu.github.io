@@ -9,7 +9,7 @@ nav_order: 6
 
 I teach courses at the intersection of signals, communications, information theory, machine learning, and data analytics. This page collects recent courses and, where available, notes and supplementary materials developed for them.
 
-<div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+<div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
 
 
   <div class="col">

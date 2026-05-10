@@ -179,7 +179,11 @@ ul.task-list input[type="checkbox"] {
   }
 
   .card-body {
-    padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .card-footer {
+    padding: 1rem 1.5rem;
   }
 }
 
@@ -239,6 +243,20 @@ ul.task-list input[type="checkbox"] {
       text-decoration: none;
     }
   }
+}
+
+.post article > h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.post article > h3 {
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.post article > p {
+  margin-bottom: 1.1rem;
 }
 
 // Navbar customization
@@ -673,13 +691,15 @@ footer.sticky-bottom {
   }
 
   .card {
+    margin-bottom: 0.25rem;
+
     img {
       width: 100%;
     }
   }
 
   .col {
-    padding-bottom: 1rem;
+    padding-bottom: 1.75rem;
   }
 
   .grid-sizer,
@@ -733,7 +753,7 @@ footer.sticky-bottom {
     margin-top: 0;
 
     li {
-      margin-bottom: 1rem;
+      margin-bottom: 1.6rem;
 
       .preview {
       }
