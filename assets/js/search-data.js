@@ -448,9 +448,9 @@ ninja.data = [{
           description: "End-to-end learned representations for compression and communication",
           section: "Projects",handler: () => {
               window.location.href = "/projects/3_project/";
-            },},{id: "projects-sparse-regression-ldpc-codes",
-          title: 'Sparse Regression LDPC Codes',
-          description: "Coding theory for reliable communication and storage",
+            },},{id: "projects-llm-watermarking",
+          title: 'LLM Watermarking',
+          description: "Information-theoretic methods for watermarking and steganography in LLM-generated text",
           section: "Projects",handler: () => {
               window.location.href = "/projects/4_project/";
             },},{id: "projects-unsourced-random-access",
