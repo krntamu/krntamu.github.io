@@ -2,7 +2,7 @@
 layout: page
 title: AI-Native Wireless
 description: Learning-driven models and algorithms for future wireless systems
-img: assets/img/projects/ai-native/cover.png
+img: 
 importance: 2
 category: work
 giscus_comments: true

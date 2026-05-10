@@ -2,7 +2,7 @@
 layout: page
 title: LLMZip
 description: Lossless text compression using large language models
-img: assets/img/projects/llmzip/cover.png
+img: 
 importance: 1
 category: work
 related_publications: true

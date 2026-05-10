@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
 subtitle: |
   <a href="https://engineering.tamu.edu/electrical/index.html">Sanchez Chair Professor &amp; Associate Department Head for AI, Dept. of Electrical and Computer Engineering, Texas A&amp;M University</a><br>

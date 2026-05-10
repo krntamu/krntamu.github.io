@@ -2,7 +2,7 @@
 layout: page
 title: Connected Intelligence and Resilient Edge AI
 description: Networked AI systems for next-generation communication, compute, and autonomy
-img: assets/img/6.jpg
+img: 
 importance: 9
 category: work
 related_publications: true

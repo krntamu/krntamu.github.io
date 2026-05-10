@@ -3,7 +3,7 @@ layout: page
 title: Neural Joint Source-Channel Coding
 description: End-to-end learned representations for compression and communication
 img: 
-importance: 3
+importance: 4
 category: work
 related_publications: true
 ---

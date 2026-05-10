@@ -2,8 +2,8 @@
 layout: page
 title: LLM Watermarking
 description: Information-theoretic methods for watermarking and steganography in LLM-generated text
-img: assets/img/projects/llm-watermarking/cover.png
-importance: 4
+img: 
+importance: 3
 category: work
 related_publications: true
 ---

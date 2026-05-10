@@ -2,7 +2,7 @@
 layout: page
 title: Over-the-Air Federated Learning
 description: Communication-efficient scheduling and computation for distributed learning
-img: assets/img/9.jpg
+img: 
 importance: 
 category: hidden
 giscus_comments: true
