@@ -1,22 +1,17 @@
-# Usernames here must be GitHub *users* (not organizations): readme-stats and profile trophies
-# do not resolve organization accounts.
-github_users:
-  - krntamu
-
 repo_description_lines_max: 2
 
-# Pinned cards use the public GitHub API; only public repositories render. Add private or
-# org-owned repos under additional_repository_links instead.
+# Pinned cards use the public GitHub API; only public repositories render.
 github_repos:
   - vcskaushik/LLMzip
+  - PJust601/OD-Stega
+  - krntamu/2025_diffusion_channel_estimation
 
-# Organizations and repos that cannot use the pin widgets (private repo, or org account).
-additional_repository_links:
-  - label: Connected Intelligence (GitHub organization)
-    url: https://github.com/connectedintelligence
-  - label: OD-Stega
-    url: https://github.com/PJust601/OD-Stega
-  - label: ecen314
+course_repositories:
+  - label: ECEN 314 Signals and Systems
     url: https://github.com/krntamu/ecen314
-  - label: 2025 diffusion channel estimation
-    url: https://github.com/krntamu/2025_diffusion_channel_estimation
+    description: Course repository for Signals and Systems materials.
+
+additional_repository_links:
+  - label: Connected Intelligence
+    url: https://github.com/connectedintelligence
+    description: GitHub organization for the Connected Intelligence Initiative.
