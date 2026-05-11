@@ -5,11 +5,15 @@ title: Teaching
 description: Courses, lecture notes, and teaching materials.
 nav: true
 nav_order: 6
+_styles: >
+  .teaching-cards {
+    row-gap: 2rem;
+  }
 ---
 
 I teach courses at the intersection of signals, communications, information theory, machine learning, and data analytics. This page collects recent courses and, where available, notes and supplementary materials developed for them.
 
-<div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+<div class="row row-cols-1 row-cols-md-2 g-4 mt-3 teaching-cards">
 
 
   <div class="col">
