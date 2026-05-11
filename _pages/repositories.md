@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /repositories/
-title: Code and Resources
+title: Resources
 description: Selected research code, course repositories, and project resources.
 nav: true
 nav_order: 4

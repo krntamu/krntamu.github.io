@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /cv/
-title: Curriculum Vitae
+title: CV
 description: Academic appointments, research, teaching, service, and professional activities.
 nav: true
 nav_order: 5
