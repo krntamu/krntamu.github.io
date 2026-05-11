@@ -23,15 +23,15 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-code-and-resources",
-          title: "Code and Resources",
+        },{id: "nav-resources",
+          title: "Resources",
           description: "Selected research code, course repositories, and project resources.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "nav-curriculum-vitae",
-          title: "Curriculum Vitae",
+        },{id: "nav-cv",
+          title: "CV",
           description: "Academic appointments, research, teaching, service, and professional activities.",
           section: "Navigation",
           handler: () => {
