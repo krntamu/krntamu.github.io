@@ -4,6 +4,7 @@ title: About
 permalink: /
 subtitle: |
   <a href="https://engineering.tamu.edu/electrical/index.html">Sanchez Chair Professor &amp; Associate Dept. Head for AI, Dept. of Electrical &amp; Computer Engineering, Texas A&amp;M University</a><br>
+  Dean's Fellow for AI, College of Engineering, Texas A&amp;M University<br>
   <a href="https://tamids.tamu.edu/">Associate Director for Educational Initiatives, Texas A&amp;M Institute of Data Science</a>
 
 profile:
@@ -29,7 +30,7 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am the Sanchez Chair Professor and the Associate Department Head for AI in the Department of Electrical and Computer Engineering at [Texas A&M University](https://engineering.tamu.edu/electrical/index.html). I currently serve as Co-Director of the [Connected Intelligence Initiative](https://connectedintelligence.github.io/) and as the Associate Director for Educational Initiatives at the [Texas A&M Institute of Data Science (TAMIDS)](https://tamids.tamu.edu/). In addition to my academic roles, I am a co-founder and advisor of [Encando.ai](https://www.encando.ai), an educational technology startup developing an AI-powered platform for teaching and learning. 
+I am the Sanchez Chair Professor and the Associate Department Head for AI in the Department of Electrical and Computer Engineering at [Texas A&M University](https://engineering.tamu.edu/electrical/index.html). I currently serve as Co-Director of the [Connected Intelligence Initiative](https://connectedintelligence.github.io/) and as the Associate Director for Educational Initiatives at the [Texas A&M Institute of Data Science (TAMIDS)](https://tamids.tamu.edu/). In addition to my academic roles, I am a co-founder of (and advisor to) [Encando.ai](https://www.encando.ai), an educational technology startup developing an AI-powered platform for teaching and learning. 
 
 My current research interests lie broadly in AI-native wireless networks, AI-enabled compression and joint-source channel coding, coding theory, information theory, and machine learning, with applications in next-generation wireless communications (such as 6G cellular systems and massive machine-type communications) and data storage. I have authored over a hundred peer-reviewed papers in these areas and have held visiting researcher positions at Qualcomm Research and at the Simons Institute for the Theory of Computing at UC Berkeley.
 
