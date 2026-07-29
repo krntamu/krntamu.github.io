@@ -3,9 +3,10 @@ layout: about
 title: About
 permalink: /
 subtitle: |
-  <a href="https://engineering.tamu.edu/electrical/index.html">Sanchez Chair Professor &amp; Associate Dept. Head for AI, Dept. of Electrical &amp; Computer Engineering, Texas A&amp;M University</a><br>
-  Dean's Fellow for AI, College of Engineering, Texas A&amp;M University<br>
-  <a href="https://tamids.tamu.edu/">Associate Director for Educational Initiatives, Texas A&amp;M Institute of Data Science</a>
+  Sanchez Chair Professor &amp; Associate Dept. Head for AI, <a href="https://engineering.tamu.edu/electrical/index.html">Dept. of Electrical &amp; Computer Engineering, Texas A&amp;M University</a><br>
+  Dean's Fellow for AI, <a href="https://engineering.tamu.edu">College of Engineering, Texas A&amp;M University</a><br>
+  Co-Director, <a href="https://connectedintelligence.github.io/"> Connected Intelligence Initiative </a><br>
+  Associate Director for Educational Initiatives, <a href="https://tamids.tamu.edu/">Texas A&amp;M Institute of Data Science</a>
 
 profile:
   align: right
