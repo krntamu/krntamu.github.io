@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A geometric explanation and definitions of the four fundamental subspaces of a real matrix.">
+  <title>The four fundamental subspaces</title>
+  <style>
+    :root { color-scheme: light; --ink: #172c36; --muted: #51646d; --teal: #146c6a; --rust: #a25622; --line: #dce4e5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6f5; color: var(--ink); font: 17px/1.65 "Segoe UI", Arial, sans-serif; }
+    main { max-width: 1280px; margin: 32px auto; padding: 48px 58px 42px; background: #fff; }
+    .eyebrow { margin: 0 0 12px; color: var(--teal); font-size: 12px; font-weight: 650; letter-spacing: .13em; text-transform: uppercase; }
+    h1 { margin: 0 0 14px; font-size: clamp(30px, 4vw, 44px); line-height: 1.17; font-weight: 650; letter-spacing: -.035em; }
+    .intro { max-width: 850px; margin: 0; color: var(--muted); font-size: 18px; }
+    h2 { margin: 0; font-size: 23px; line-height: 1.3; font-weight: 600; letter-spacing: -.02em; }
+    h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.4; font-weight: 600; }
+    p { margin: 8px 0; }
+    math, .math { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; }
+    math { font-size: 1.13em; }
+    .math { font-size: 1.14em; }
+    .var { font-style: italic; }
+    .section-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 20px; margin-top: 38px; }
+    .section-heading p { color: var(--muted); font-size: 14px; }
+    figure { margin: 14px 0 0; }
+    .diagram-scroll { overflow-x: auto; }
+    .diagram { display: block; width: 100%; min-width: 760px; height: auto; }
+    .diagram text { fill: var(--ink); font-family: "Cambria Math", "Times New Roman", serif; font-size: 25px; }
+    .diagram .space-name { font-family: "Segoe UI", Arial, sans-serif; font-size: 21px; font-weight: 500; }
+    .diagram .ambient { font-size: 34px; }
+    .diagram .space-formula { font-size: 29px; }
+    .diagram .point-label { font-size: 30px; font-style: italic; }
+    .diagram .map-label { font-size: 25px; paint-order: stroke; stroke: white; stroke-width: 9px; stroke-linejoin: round; }
+    .diagram .teal-label { fill: var(--teal); }
+    .diagram .rust-label { fill: var(--rust); }
+    .diagram .plane { stroke-width: 1.8; stroke-linejoin: round; }
+    figcaption { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .insights { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 26px; margin-top: 26px; padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .insights .equation { font-size: 23px; line-height: 1.4; margin: 0 0 8px; }
+    .insights p:last-child { color: var(--muted); font-size: 15px; margin-bottom: 0; }
+    .notation { margin: 12px 0 22px; color: var(--muted); font-size: 15px; }
+    .definitions { margin: 0; padding: 0; list-style: none; counter-reset: definitions; }
+    .definitions li { counter-increment: definitions; display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding: 23px 0; border-top: 1px solid var(--line); }
+    .definitions li::before { content: counter(definitions, decimal-leading-zero); color: var(--muted); font-size: 13px; padding-top: 4px; }
+    .definition-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 3px 12px; }
+    .alias { color: var(--muted); font-size: 15px; font-weight: 400; }
+    .formula { max-width: 100%; overflow-x: auto; padding: 6px 0 9px; }
+    .formula math { font-size: clamp(18px, 2.15vw, 25px); }
+    .meaning { color: var(--muted); font-size: 15px; margin: 3px 0 0; }
+    .relations { margin-top: 20px; padding: 26px 28px; background: #f1f7f6; }
+    .relations h2 { font-size: 20px; }
+    .relation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 34px; margin-top: 16px; }
+    .relation-grid p { margin: 0; min-width: 0; max-width: 100%; overflow-x: auto; padding-bottom: 4px; }
+    .relation-grid math { font-size: clamp(18px, 2vw, 23px); }
+    .relations .explanation { margin-top: 18px; color: var(--muted); font-size: 15px; }
+    .relations .key-insight { margin: 20px 0 0; padding: 16px 20px; border-left: 4px solid var(--teal); background: #e2efec; color: #104f4e; font-size: 17px; line-height: 1.7; print-color-adjust: exact; }
+    .key-insight strong { font-weight: 700; }
+    footer { margin-top: 28px; color: var(--muted); font-size: 13px; }
+    .lab { margin-top: 42px; padding-top: 30px; border-top: 2px solid var(--teal); }
+    .lab-intro { max-width: 820px; color: var(--muted); }
+    .lab-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 14px; margin: 22px 0 12px; }
+    .lab label { display: block; font-size: 15px; font-weight: 600; }
+    .lab input { min-width: 0; border: 1px solid #9cafb5; border-radius: 4px; padding: 8px; color: var(--ink); background: #fff; font: 16px/1.4 "Segoe UI", Arial, sans-serif; }
+    .lab input[type="number"] { display: block; width: 85px; margin-top: 5px; }
+    .lab button { border: 1px solid var(--teal); border-radius: 4px; padding: 10px 16px; color: var(--teal); background: #fff; font: 600 15px/1.4 "Segoe UI", Arial, sans-serif; cursor: pointer; }
+    .lab button.primary { color: #fff; background: var(--teal); }
+    .lab button:hover { background: #e9f5f3; }
+    .lab button.primary:hover { background: #105654; }
+    .lab :focus-visible { outline: 3px solid #d18c39; outline-offset: 3px; }
+    .lab button:disabled { opacity: .5; cursor: default; }
+    .lab .hint { color: var(--muted); font-size: 14px; }
+    .lab .error { color: #a12820; font-size: 15px; }
+    .lab .error:empty { display: none; }
+    .lab .status { min-height: 1.6em; color: var(--muted); font-size: 14px; }
+    .grid-scroll, .matrix-scroll { max-width: 100%; overflow-x: auto; padding: 5px 3px 12px; }
+    .entry-grid { border-collapse: separate; border-spacing: 5px; }
+    .entry-grid th { padding: 0 5px; color: var(--muted); font-size: 12px; font-weight: 400; text-align: center; }
+    .entry-grid input { width: 82px; text-align: right; font-variant-numeric: tabular-nums; }
+    .entry-grid input[aria-invalid="true"] { border: 2px solid #a12820; }
+    .lab-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+    .lab-step { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .step-index { display: inline-block; margin-right: 10px; color: var(--teal); font-size: 13px; vertical-align: middle; }
+    .lab-step > p { max-width: 900px; font-size: 15px; }
+    .matrix-line { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin: 18px 0 2px; min-width: 0; }
+    .matrix-block { max-width: 100%; min-width: 0; }
+    .matrix-block > p { margin: 0 0 5px; font-size: 14px; color: var(--muted); }
+    .matrix-shell { display: inline-block; position: relative; padding: 5px 11px; margin: 0 4px; border-left: 2px solid var(--ink); border-right: 2px solid var(--ink); }
+    .matrix-shell::before, .matrix-shell::after { position: absolute; content: ''; left: 0; right: 0; height: 5px; border-left: 6px solid var(--ink); border-right: 6px solid var(--ink); }
+    .matrix-shell::before { top: 0; }
+    .matrix-shell::after { bottom: 0; }
+    .number-matrix { border-collapse: collapse; font: 20px/1.5 "Cambria Math", "Times New Roman", serif; font-variant-numeric: tabular-nums; }
+    .number-matrix td { padding: 5px 12px; text-align: right; white-space: nowrap; }
+    .number-matrix th { padding: 1px 10px 7px; color: var(--muted); text-align: center; font: 12px/1.4 "Segoe UI", Arial, sans-serif; }
+    .number-matrix .free { background: #fcf1e7; }
+    .number-matrix .pivot { background: #e9f5f3; }
+    .number-matrix .pivot-entry { font-weight: bold; color: var(--teal); }
+    .fraction { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: 1.15; font-size: .86em; }
+    .fraction .numerator { border-bottom: 1px solid currentColor; padding: 0 3px 2px; }
+    .fraction .denominator { padding-top: 2px; }
+    .basis-empty { display: inline-block; padding: 10px 0; color: var(--muted); font-size: 15px; }
+    .lab details { margin-top: 14px; font-size: 14px; }
+    .lab summary { color: var(--teal); cursor: pointer; }
+    .decomposition { margin-top: 34px; padding: 24px; background: #f1f7f6; }
+    .decomposition h3 { font-size: 21px; }
+    .decomposition .entry-grid input { width: 80px; }
+    .decomp-equation { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 18px; }
+    .decomp-equation .operator { font: 28px "Cambria Math", serif; }
+    .decomp-equation .component { max-width: 100%; min-width: 0; }
+    .decomp-equation .component > p { margin: 0 0 7px; font-size: 18px; }
+    .checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px 25px; margin-top: 20px; }
+    .check { min-width: 0; }
+    .check > p { font-size: 15px; margin: 0 0 5px; }
+    .pseudoinverse .lead-question { margin: 20px 0; padding-left: 20px; border-left: 4px solid var(--teal); font-size: 21px; color: #104f4e; }
+    .pseudo-definition { margin: 26px 0; padding: 22px 24px; background: #fcf5e9; border-left: 4px solid #b58132; }
+    .pseudo-definition h3 { color: #725017; }
+    .pseudo-definition p { font-size: 16px; }
+    .pseudo-definition ol { margin: 16px 0; padding-left: 24px; }
+    .pseudo-definition li { padding-left: 5px; margin: 16px 0; }
+    .display-equation { max-width: 100%; overflow-x: auto; padding: 12px 2px; }
+    .display-equation math { font-size: 23px; }
+    .case-scroll { overflow-x: auto; max-width: 100%; margin: 18px 0; }
+    .case-table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; }
+    .case-table th, .case-table td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: 14px 16px 14px 0; }
+    .case-table th { color: var(--teal); font-weight: 600; }
+    .case-table td:first-child { min-width: 120px; }
+    .pseudo-formulas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; margin-top: 16px; }
+    .pseudo-formulas > div { min-width: 0; }
+    .pseudo-formulas h4 { margin: 0; font-size: 16px; font-weight: 600; }
+    .pseudo-formulas p { margin: 4px 0; font-size: 14px; color: var(--muted); }
+    .penrose-equations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 30px; }
+    .pseudo-worked { padding-top: 28px; margin-top: 30px; border-top: 1px solid var(--line); }
+    .pseudo-worked h3 { font-size: 23px; }
+    .answer-note { padding: 14px 18px; margin: 20px 0; border-left: 4px solid var(--teal); background: #e9f5f3; color: #104f4e; font-weight: 600; }
+    .live-pseudo { margin: 24px 0; padding-top: 22px; border-top: 1px solid var(--line); }
+    .live-pseudo h4 { margin: 0 0 8px; font-size: 20px; }
+    .live-pseudo-svg { display: block; width: 100%; min-width: 760px; height: auto; }
+    .live-pseudo-svg text { fill: var(--ink); font: 21px "Segoe UI", Arial, sans-serif; }
+    .live-pseudo-svg .live-heading { font-size: 23px; font-weight: 600; }
+    .live-pseudo-svg .live-symbol { font: italic 27px "Cambria Math", "Times New Roman", serif; paint-order: stroke; stroke: #fff; stroke-width: 6px; stroke-linejoin: round; }
+    .live-pseudo-svg .live-space { font-size: 18px; }
+    .live-pseudo-svg .teal-text { fill: var(--teal); }
+    .live-pseudo-svg .rust-text { fill: var(--rust); }
+    .live-pseudo-svg .live-origin { font-size: 18px; }
+    .live-pseudo-svg .live-path-label { paint-order: stroke; stroke: #fff; stroke-width: 6px; stroke-linejoin: round; }
+    .live-vectors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 24px; margin-top: 8px; }
+    .live-vectors > div { min-width: 0; }
+    .live-vectors p { margin: 0; font-size: 16px; }
+    .live-vectors .matrix-scroll { margin-top: 5px; }
+    .live-norms { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 8px 0; color: var(--muted); font-size: 14px; }
+    .live-pseudo .live-message { color: var(--muted); font-size: 15px; margin: 8px 0; }
+    [hidden] { display: none !important; }
+    @media (max-width: 700px) {
+      body { background: #fff; }
+      main { margin: 0; padding: 28px 20px; }
+      .intro { font-size: 16px; }
+      .section-heading { margin-top: 30px; }
+      .insights, .relation-grid { grid-template-columns: 1fr; gap: 20px; }
+      .definitions li { grid-template-columns: 24px minmax(0, 1fr); gap: 10px; }
+      .relations { padding: 22px 18px; }
+      .diagram-scroll { border-bottom: 1px solid var(--line); }
+      .lab-toolbar { gap: 12px; }
+      .decomposition { padding: 20px 14px; }
+      .checks { grid-template-columns: 1fr; }
+      .pseudo-formulas, .penrose-equations { grid-template-columns: 1fr; }
+      .pseudo-definition { padding: 18px; }
+      .live-vectors { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .decomp-equation { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; }
+      .decomp-equation .component:first-child { grid-column: 2; }
+    }
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      body { background: #fff; font-size: 11pt; }
+      main { margin: 0; padding: 0; max-width: none; }
+      h1 { font-size: 28pt; }
+      .intro { font-size: 11pt; }
+      .diagram { min-width: 0; }
+      .diagram-scroll { overflow: visible; }
+      figure, .insights, .definitions li, .relations { break-inside: avoid; }
+      .formula math { font-size: 15pt; }
+      .section-heading { margin-top: 22px; }
+      .relations { print-color-adjust: exact; }
+      .lab-toolbar, .lab-actions, #matrix-input-wrap, #vector-form, #y-form, .lab .error, .lab .status { display: none; }
+      .matrix-scroll { overflow: visible; }
+      .lab-step, .decomp-equation, .check { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">ECEN 601 · Linear algebra</p>
+    <h1>The four fundamental subspaces</h1>
+    <p class="intro">A matrix <math aria-label="A in R m by n"><mi>A</mi><mo>∈</mo><msup><mi>ℝ</mi><mrow><mi>m</mi><mo>×</mo><mi>n</mi></mrow></msup></math> defines a linear map from <math><msup><mi>ℝ</mi><mi>n</mi></msup></math> to <math><msup><mi>ℝ</mi><mi>m</mi></msup></math>. Its four fundamental subspaces describe which input directions matter, which disappear, and which output directions are reachable.</p>
+  </header>
+
+  <section aria-labelledby="geometry-heading">
+    <div class="section-heading">
+      <h2 id="geometry-heading">A geometric picture</h2>
+      <p>Input space → output space</p>
+    </div>
+    <figure>
+      <div class="diagram-scroll">
+        <svg class="diagram" viewBox="0 0 1240 690" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-description">
+          <title id="diagram-title">The four fundamental subspaces and the action of A</title>
+          <desc id="diagram-description">In R n, the row space R(A transpose) and nullspace N(A) are orthogonal complements. An input x decomposes uniquely as x r plus x n. The dashed lines complete the vector addition parallelogram. Both x and x r map to the same vector A x in the column space R(A) in R m, while x n maps to zero. The left nullspace N(A transpose) is the orthogonal complement of the column space. The planes are schematic and do not specify the dimensions of the subspaces.</desc>
+          <defs>
+            <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#146c6a"/></marker>
+            <marker id="arrow-rust" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#a25622"/></marker>
+            <marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#51646d"/></marker>
+          </defs>
+
+          <!-- The four parallelograms preserve the arrangement of the supplied figure. -->
+          <path class="plane" d="M245 365 L116 253 L334 40 L463 152 Z" fill="#e9f5f3" stroke="#146c6a"/>
+          <path class="plane" d="M245 365 L143 469 L350 658 L452 554 Z" fill="#fcf1e7" stroke="#a25622"/>
+          <path class="plane" d="M980 365 L855 147 L1088 35 L1213 253 Z" fill="#e9f5f3" stroke="#146c6a"/>
+          <path class="plane" d="M980 365 L805 450 L915 660 L1090 575 Z" fill="#fcf1e7" stroke="#a25622"/>
+
+          <text class="ambient" x="115" y="72">ℝ<tspan baseline-shift="super" font-size="21">n</tspan></text>
+          <text class="ambient" x="1170" y="83">ℝ<tspan baseline-shift="super" font-size="21">m</tspan></text>
+          <text class="space-name teal-label" x="302" y="129" text-anchor="middle">Row space</text>
+          <text class="space-formula teal-label" x="302" y="168" text-anchor="middle">ℛ(A<tspan baseline-shift="super" font-size="18">T</tspan>)</text>
+          <text class="space-name rust-label" x="314" y="543" text-anchor="middle">Nullspace</text>
+          <text class="space-formula rust-label" x="332" y="584" text-anchor="middle">𝒩(A)</text>
+          <text class="space-name teal-label" x="1048" y="133" text-anchor="middle">Column space</text>
+          <text class="space-formula teal-label" x="1048" y="174" text-anchor="middle">ℛ(A)</text>
+          <text class="space-name rust-label" x="951" y="514" text-anchor="middle">Left nullspace</text>
+          <text class="space-formula rust-label" x="951" y="556" text-anchor="middle">𝒩(A<tspan baseline-shift="super" font-size="18">T</tspan>)</text>
+
+          <!-- x = x_r + x_n; dashed edges form an exact parallelogram in the drawing. -->
+          <path d="M334 218 L375 346 L286 493" fill="none" stroke="#75858d" stroke-width="1.8" stroke-dasharray="8 8"/>
+          <path d="M245 365 L375 346" fill="none" stroke="#51646d" stroke-width="1.6" marker-end="url(#arrow-ink)"/>
+
+          <!-- A maps the row-space component and the full input to the same output. -->
+          <path d="M334 218 C625 130 806 143 1051 270" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#arrow-teal)"/>
+          <path d="M375 346 C650 270 817 221 1051 270" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#arrow-teal)"/>
+          <path d="M286 493 C563 380 769 333 980 365" fill="none" stroke="#a25622" stroke-width="3" marker-end="url(#arrow-rust)"/>
+          <text class="map-label" x="661" y="145" text-anchor="middle">x<tspan baseline-shift="sub" font-size="17">r</tspan> ↦ Ax<tspan baseline-shift="sub" font-size="17">r</tspan> = Ax</text>
+          <text class="map-label" x="689" y="251" text-anchor="middle">x ↦ Ax</text>
+          <text class="map-label" x="662" y="411" text-anchor="middle">x<tspan baseline-shift="sub" font-size="17">n</tspan> ↦ Ax<tspan baseline-shift="sub" font-size="17">n</tspan> = 0</text>
+
+          <g fill="#172c36">
+            <circle cx="245" cy="365" r="4"/><circle cx="334" cy="218" r="4"/>
+            <circle cx="286" cy="493" r="4"/><circle cx="375" cy="346" r="4"/>
+            <circle cx="980" cy="365" r="4"/><circle cx="1051" cy="270" r="4"/>
+          </g>
+          <text x="224" y="385">0</text>
+          <text x="996" y="389">0</text>
+          <text class="point-label" x="295" y="217">x<tspan baseline-shift="sub" font-size="20">r</tspan></text>
+          <text class="point-label" x="244" y="510">x<tspan baseline-shift="sub" font-size="20">n</tspan></text>
+          <text class="point-label" x="383" y="380">x</text>
+          <text class="point-label" x="1070" y="287">Ax</text>
+        </svg>
+      </div>
+      <figcaption>Reconstructed from the supplied figure. Each pair of subspaces meets only at the origin and is orthogonal in its ambient space. The parallelograms are schematic: their drawn angles and areas do not represent actual angles or dimensions. On small screens, scroll the diagram horizontally.</figcaption>
+    </figure>
+
+    <div class="insights">
+      <div>
+        <p class="equation"><math><mi>x</mi><mo>=</mo><msub><mi>x</mi><mi>r</mi></msub><mo>+</mo><msub><mi>x</mi><mi>n</mi></msub></math></p>
+        <p>Every input has a unique row-space component <span class="math"><span class="var">x</span><sub>r</sub></span> and nullspace component <span class="math"><span class="var">x</span><sub>n</sub></span>. These components are orthogonal.</p>
+      </div>
+      <div>
+        <p class="equation"><math><mi>A</mi><mi>x</mi><mo>=</mo><mi>A</mi><msub><mi>x</mi><mi>r</mi></msub><mo>,</mo><mspace width=".4em"/><mi>A</mi><msub><mi>x</mi><mi>n</mi></msub><mo>=</mo><mn>0</mn></math></p>
+        <p>The nullspace component disappears under <span class="math"><span class="var">A</span></span>. Only the row-space component determines the output.</p>
+      </div>
+      <div>
+        <p class="equation"><math><mi>A</mi><mi>x</mi><mo>∈</mo><mi>ℛ</mi><mo>(</mo><mi>A</mi><mo>)</mo></math></p>
+        <p>Every output lies in the column space. The left nullspace contains the output-space directions orthogonal to every column of <span class="math"><span class="var">A</span></span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="definitions-heading">
+    <div class="section-heading"><h2 id="definitions-heading">Definitions</h2></div>
+    <p class="notation">Let <math><mi>A</mi><mo>:</mo><msup><mi>ℝ</mi><mi>n</mi></msup><mo>→</mo><msup><mi>ℝ</mi><mi>m</mi></msup></math>. The notes use <math><msup><mi>A</mi><mo>∗</mo></msup></math> for the adjoint; over the real numbers, <math><msup><mi>A</mi><mo>∗</mo></msup><mo>=</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup></math>, the transpose used below. Vectors are column vectors.</p>
+    <ol class="definitions">
+      <li><div>
+        <div class="definition-heading"><h3>Range of A <span class="alias">(column space of A)</span></h3></div>
+        <div class="formula"><math display="inline" aria-label="The range of A is the set of y in R m for which y equals A x for some x in R n"><mi>ℛ</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>:=</mo><mo>{</mo><mi>y</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>m</mi></msup><mo>:</mo><mi>y</mi><mo>=</mo><mi>A</mi><mi>x</mi><mo>,</mo><mspace width=".4em"/><mi>x</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>n</mi></msup><mo>}</mo></math></div>
+        <p class="meaning">All outputs obtained as <span class="math"><span class="var">x</span></span> ranges over the entire input space; equivalently, all linear combinations of the columns of <span class="math"><span class="var">A</span></span>.</p>
+      </div></li>
+      <li><div>
+        <div class="definition-heading"><h3>Nullspace of A <span class="alias">(kernel of A)</span></h3></div>
+        <div class="formula"><math display="inline" aria-label="The nullspace of A is the set of x in R n such that A x equals zero"><mi>𝒩</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>:=</mo><mo>{</mo><mi>x</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>n</mi></msup><mo>:</mo><mi>A</mi><mi>x</mi><mo>=</mo><msub><mn>0</mn><mi>m</mi></msub><mo>}</mo></math></div>
+        <p class="meaning">All input vectors sent to the zero vector in <math><msup><mi>ℝ</mi><mi>m</mi></msup></math>.</p>
+      </div></li>
+      <li><div>
+        <div class="definition-heading"><h3>Range of A<sup>T</sup> <span class="alias">(row space of A)</span></h3></div>
+        <div class="formula"><math display="inline" aria-label="The range of A transpose is the set of x in R n for which x equals A transpose y for some y in R m"><mi>ℛ</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo><mo>:=</mo><mo>{</mo><mi>x</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>n</mi></msup><mo>:</mo><mi>x</mi><mo>=</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mi>y</mi><mo>,</mo><mspace width=".4em"/><mi>y</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>m</mi></msup><mo>}</mo></math></div>
+        <p class="meaning">All outputs of <math><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup></math>; equivalently, all linear combinations of the rows of <span class="math"><span class="var">A</span></span>, written as column vectors in <math><msup><mi>ℝ</mi><mi>n</mi></msup></math>.</p>
+      </div></li>
+      <li><div>
+        <div class="definition-heading"><h3>Nullspace of A<sup>T</sup> <span class="alias">(left nullspace of A)</span></h3></div>
+        <div class="formula"><math display="inline" aria-label="The left nullspace of A is the set of y in R m such that A transpose y equals zero"><mi>𝒩</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo><mo>:=</mo><mo>{</mo><mi>y</mi><mo>∈</mo><msup><mi>ℝ</mi><mi>m</mi></msup><mo>:</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mi>y</mi><mo>=</mo><msub><mn>0</mn><mi>n</mi></msub><mo>}</mo></math></div>
+        <p class="meaning">All vectors orthogonal to every column of <span class="math"><span class="var">A</span></span>. Equivalently, <math><msup><mi>y</mi><mi mathvariant="normal">T</mi></msup><mi>A</mi><mo>=</mo><msup><msub><mn>0</mn><mi>n</mi></msub><mi mathvariant="normal">T</mi></msup></math>, which explains the word “left.”</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="relations" aria-labelledby="relations-heading">
+    <h2 id="relations-heading">Two orthogonal decompositions</h2>
+    <div class="relation-grid">
+      <p><math aria-label="R n equals the orthogonal direct sum of the row space and nullspace"><msup><mi>ℝ</mi><mi>n</mi></msup><mo>=</mo><mi>ℛ</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo><msub><mo>⊕</mo><mo>⊥</mo></msub><mi>𝒩</mi><mo>(</mo><mi>A</mi><mo>)</mo></math></p>
+      <p><math aria-label="R m equals the orthogonal direct sum of the column space and left nullspace"><msup><mi>ℝ</mi><mi>m</mi></msup><mo>=</mo><mi>ℛ</mi><mo>(</mo><mi>A</mi><mo>)</mo><msub><mo>⊕</mo><mo>⊥</mo></msub><mi>𝒩</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo></math></p>
+      <p><math><mi>dim</mi><mspace width=".2em"/><mi>ℛ</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo><mo>=</mo><mi>r</mi><mo>,</mo><mspace width=".5em"/><mi>dim</mi><mspace width=".2em"/><mi>𝒩</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>=</mo><mi>n</mi><mo>−</mo><mi>r</mi></math></p>
+      <p><math><mi>dim</mi><mspace width=".2em"/><mi>ℛ</mi><mo>(</mo><mi>A</mi><mo>)</mo><mo>=</mo><mi>r</mi><mo>,</mo><mspace width=".5em"/><mi>dim</mi><mspace width=".2em"/><mi>𝒩</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo><mo>=</mo><mi>m</mi><mo>−</mo><mi>r</mi></math></p>
+    </div>
+    <p class="explanation">Here <math><mi>r</mi><mo>=</mo><mi mathvariant="normal">rank</mi><mo>(</mo><mi>A</mi><mo>)</mo></math> and <math><msub><mo>⊕</mo><mo>⊥</mo></msub></math> denotes an orthogonal direct sum.</p>
+    <p class="key-insight"><strong>In particular, <span class="math"><span class="var">A</span></span> maps its row space bijectively onto its column space: every attainable output has exactly one preimage in the row space.</strong></p>
+  </section>
+  <section class="lab" aria-labelledby="lab-heading">
+    <p class="eyebrow">Try a matrix</p>
+    <h2 id="lab-heading">Compute the subspaces, then split an input</h2>
+    <p class="lab-intro">Enter a real matrix <span class="math"><i>A</i></span>. Follow its reduction, construct a basis for each fundamental subspace, and decompose any vector in its input space.</p>
+    <form id="matrix-form" novalidate>
+      <div class="lab-toolbar">
+        <label for="matrix-rows">Rows, m<input id="matrix-rows" type="number" min="1" max="10" step="1" value="3" required></label>
+        <label for="matrix-cols">Columns, n<input id="matrix-cols" type="number" min="1" max="10" step="1" value="4" required></label>
+        <button id="resize-matrix" type="button">Resize grid</button>
+        <button id="load-example" type="button">Load example</button>
+      </div>
+      <p class="hint" id="matrix-help">Use integers, decimals, or fractions such as 1/3. Resize to any size from 1 × 1 to 10 × 10; existing entries are kept. You can paste a rectangular block from a spreadsheet into any cell. Wide grids and matrices scroll horizontally.</p>
+      <div id="matrix-input-wrap" class="grid-scroll"><table class="entry-grid" aria-label="Entries of A" aria-describedby="matrix-help"><thead id="matrix-grid-head"></thead><tbody id="matrix-grid-body"></tbody></table></div>
+      <div class="lab-actions"><button class="primary" type="submit">Compute subspaces</button></div>
+      <p id="matrix-error" class="error" role="alert"></p>
+    </form>
+    <p id="lab-status" class="status" role="status" aria-live="polite"></p>
+    <noscript><p>This interactive segment requires JavaScript. The diagram and definitions above remain available.</p></noscript>
+    <div id="subspace-results" hidden>
+      <section class="lab-step" aria-labelledby="rref-heading">
+        <h3 id="rref-heading"><span class="step-index">01</span>Reduce A to RREF</h3>
+        <p id="rank-description"></p>
+        <div class="matrix-line">
+          <div class="matrix-block"><p class="math">A</p><div id="original-matrix"></div></div>
+          <span class="math" aria-hidden="true">→</span>
+          <div class="matrix-block"><p class="math">R = rref(A)</p><div id="rref-matrix"></div></div>
+        </div>
+        <p class="hint">Teal columns are pivot columns; amber columns are free columns. Column numbers refer to the original variable order.</p>
+        <details><summary>Show the row operations</summary><ol id="row-operations"></ol></details>
+      </section>
+      <section class="lab-step" aria-labelledby="rowbasis-heading">
+        <h3 id="rowbasis-heading"><span class="step-index">02</span>Row-space basis: columns of U</h3>
+        <p>Take the nonzero rows of <span class="math"><i>R</i></span> and transpose them into columns. If <span class="math"><i>R</i><sub>r</sub></span> is the matrix of those rows, then <span class="math"><i>U</i> = <i>R</i><sub>r</sub><sup>T</sup></span>. Its columns form a basis for <span class="math">ℛ(<i>A</i><sup>T</sup>)</span>.</p>
+        <div class="matrix-block"><p class="math" id="u-label"></p><div id="row-basis"></div></div>
+      </section>
+      <section class="lab-step" aria-labelledby="nullbasis-heading">
+        <h3 id="nullbasis-heading"><span class="step-index">03</span>Nullspace basis: the −1 trick</h3>
+        <p>Place each nonzero RREF row into the row numbered by its pivot column. At each free-column index <span class="math"><i>j</i></span>, insert a row with −1 in position <span class="math"><i>j</i></span> and zeros elsewhere. This gives a square matrix <span class="math"><i>K</i></span>. Its free columns form the nullspace basis <span class="math"><i>N</i></span>.</p>
+        <div class="matrix-line">
+          <div class="matrix-block"><p class="math">K: completed RREF</p><div id="minus-one-matrix"></div></div>
+          <span class="math" aria-hidden="true">→</span>
+          <div class="matrix-block"><p class="math" id="n-label"></p><div id="null-basis"></div></div>
+        </div>
+        <p id="null-description" class="hint"></p>
+      </section>
+      <section class="lab-step" aria-labelledby="colbasis-heading">
+        <h3 id="colbasis-heading"><span class="step-index">04</span>Column-space basis: columns of AU</h3>
+        <p>Compute <span class="math"><i>C</i> = <i>AU</i></span>. The restriction of <span class="math"><i>A</i></span> to its row space is one-to-one and maps onto its column space, so the images of the basis vectors in <span class="math"><i>U</i></span> form a basis for <span class="math">ℛ(<i>A</i>)</span>.</p>
+        <div class="matrix-block"><p class="math" id="c-label"></p><div id="column-basis"></div></div>
+      </section>
+      <section class="lab-step" aria-labelledby="leftbasis-heading">
+        <h3 id="leftbasis-heading"><span class="step-index">05</span>Left-nullspace basis: reduce A<sup>T</sup> separately</h3>
+        <p>Reduce <span class="math"><i>A</i><sup>T</sup></span>, then apply the same −1 trick to its free columns. The resulting columns of <span class="math"><i>L</i></span> form a basis for <span class="math">𝒩(<i>A</i><sup>T</sup>)</span>, and <span class="math"><i>A</i><sup>T</sup><i>L</i> = 0</span>.</p>
+        <div class="matrix-line">
+          <div class="matrix-block"><p class="math">rref(A<sup>T</sup>)</p><div id="transpose-rref"></div></div>
+          <span class="math" aria-hidden="true">→</span>
+          <div class="matrix-block"><p class="math" id="l-label"></p><div id="left-basis"></div></div>
+        </div>
+        <details><summary>Show the completed −1-trick matrix for A<sup>T</sup></summary><div id="left-minus-one-matrix"></div></details>
+      </section>
+      <section class="decomposition" aria-labelledby="decomp-heading">
+        <h3 id="decomp-heading">Decompose any input vector</h3>
+        <p class="hint" id="vector-help"></p>
+        <form id="vector-form" novalidate>
+          <div class="grid-scroll"><table class="entry-grid" aria-label="Components of x" aria-describedby="vector-help"><thead id="vector-grid-head"></thead><tbody id="vector-grid-body"></tbody></table></div>
+          <button class="primary" type="submit">Decompose x</button>
+          <p id="vector-error" class="error" role="alert"></p>
+        </form>
+        <p id="vector-status" class="status" role="status" aria-live="polite"></p>
+        <div id="decomp-results" hidden>
+          <p class="hint" id="projection-method"></p>
+          <div class="decomp-equation" aria-label="x equals x r plus x n">
+            <div class="component"><p class="math">x</p><div id="x-output"></div></div>
+            <span class="operator">=</span>
+            <div class="component"><p class="math">x<sub>r</sub> ∈ ℛ(A<sup>T</sup>)</p><div id="xr-output"></div></div>
+            <span class="operator">+</span>
+            <div class="component"><p class="math">x<sub>n</sub> ∈ 𝒩(A)</p><div id="xn-output"></div></div>
+          </div>
+          <details><summary>Show the projection calculation</summary>
+            <p class="math">G = U<sup>T</sup>U, b = U<sup>T</sup>x, Gc = b, x<sub>r</sub> = Uc, x<sub>n</sub> = x − x<sub>r</sub>.</p>
+            <div class="matrix-line">
+              <div class="matrix-block"><p class="math">G</p><div id="gram-output"></div></div>
+              <div class="matrix-block"><p class="math">b</p><div id="rhs-output"></div></div>
+              <div class="matrix-block"><p class="math">c</p><div id="coeff-output"></div></div>
+            </div>
+          </details>
+          <div class="checks">
+            <div class="check"><p class="math">Ax<sub>n</sub> = 0</p><div id="kernel-check"></div></div>
+            <div class="check"><p class="math">U<sup>T</sup>x<sub>n</sub> = 0</p><div id="orthogonal-check"></div></div>
+            <div class="check"><p class="math">Ax = Ax<sub>r</sub></p><div id="image-check"></div></div>
+            <div class="check"><p class="math">x<sub>r</sub><sup>T</sup>x<sub>n</sub> = <span id="dot-check"></span></p><p class="hint">The two components are orthogonal.</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p class="hint">Calculations use exact rational arithmetic, including for finite decimals. Hover over a fractional entry for a decimal approximation. All calculations run locally in your browser.</p>
+  </section>
+  <section class="lab pseudoinverse" aria-labelledby="pseudo-heading">
+    <p class="eyebrow">Reversing the map</p>
+    <h2 id="pseudo-heading">The pseudoinverse</h2>
+    <p class="lead-question">Given a target <span class="math"><i>y</i></span>, how can we recover an input <span class="math"><i>x</i></span> when <span class="math"><i>y</i> ∈ ℛ(<i>A</i>)</span>—and what should an “inverse” return when <span class="math"><i>y</i></span> lies outside the range?</p>
+    <p>If <span class="math"><i>y</i></span> is attainable, the bijection from the row space to the column space gives exactly one row-space input that maps to it. Other exact solutions differ by a nullspace vector. The row-space solution has the smallest Euclidean norm, because adding an orthogonal nullspace component can only increase its norm.</p>
+    <p>If <span class="math"><i>y</i></span> is outside the range, no exact inverse exists at that target. First project it onto the column space:</p>
+    <div class="display-equation"><math aria-label="y equals y r plus y n; y r is the projection onto the column space and y n is in the left nullspace"><mi>y</mi><mo>=</mo><msub><mi>y</mi><mi>r</mi></msub><mo>+</mo><msub><mi>y</mi><mi>n</mi></msub><mo>,</mo><mspace width=".6em"/><msub><mi>y</mi><mi>r</mi></msub><mo>=</mo><msub><mi>P</mi><mrow><mi>ℛ</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></msub><mi>y</mi><mo>,</mo><mspace width=".6em"/><msub><mi>y</mi><mi>n</mi></msub><mo>∈</mo><mi>𝒩</mi><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo></math></div>
+    <p>Then invert <span class="math"><i>y</i><sub>r</sub></span> within the row space. This gives the minimum-norm least-squares solution. Here <span class="math"><i>y</i><sub>n</sub></span> is the left-nullspace component in the <em>output</em> space, while <span class="math"><i>x</i><sub>n</sub></span> above belongs to the nullspace in the input space.</p>
+    <div class="display-equation"><math aria-label="The squared residual splits into a reachable error and an unavoidable left-nullspace error"><msup><mrow><mo>‖</mo><mi>A</mi><mi>x</mi><mo>−</mo><mi>y</mi><mo>‖</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mrow><mo>‖</mo><mi>A</mi><mi>x</mi><mo>−</mo><msub><mi>y</mi><mi>r</mi></msub><mo>‖</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>‖</mo><msub><mi>y</mi><mi>n</mi></msub><mo>‖</mo></mrow><mn>2</mn></msup></math></div>
+    <p class="hint">The two error components are orthogonal. Choosing an input with <span class="math"><i>Ax</i> = <i>y</i><sub>r</sub></span> eliminates the first term, while the second term is unavoidable.</p>
+
+    <figure>
+      <div class="diagram-scroll">
+        <svg class="diagram" viewBox="0 0 1240 690" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pseudo-diagram-title pseudo-diagram-desc">
+          <title id="pseudo-diagram-title">The pseudoinverse projects an output and reverses the row-space map</title>
+          <desc id="pseudo-diagram-desc">In the output space Y, y decomposes into y r in the column space and y n in the left nullspace. Both y and y r map under A dagger to the same minimum-norm input x hat in the row space. The left-nullspace component y n maps to zero. The diagram reconstructs the supplied figure, with y replacing b and y r replacing p.</desc>
+          <defs>
+            <marker id="pseudo-teal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#146c6a"/></marker>
+            <marker id="pseudo-rust-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#a25622"/></marker>
+          </defs>
+          <path class="plane" d="M245 365 L116 253 L334 40 L463 152 Z" fill="#e9f5f3" stroke="#146c6a"/>
+          <path class="plane" d="M245 365 L143 469 L350 658 L452 554 Z" fill="#fcf1e7" stroke="#a25622"/>
+          <path class="plane" d="M980 365 L855 147 L1088 35 L1213 253 Z" fill="#e9f5f3" stroke="#146c6a"/>
+          <path class="plane" d="M980 365 L805 450 L915 660 L1090 575 Z" fill="#fcf1e7" stroke="#a25622"/>
+          <text class="ambient" x="105" y="72">X = ℝ<tspan baseline-shift="super" font-size="21">n</tspan></text>
+          <text class="ambient" x="1122" y="82" style="font-size:28px">Y = ℝ<tspan baseline-shift="super" font-size="18">m</tspan></text>
+          <text class="space-name teal-label" x="302" y="129" text-anchor="middle">Row space</text>
+          <text class="space-formula teal-label" x="302" y="168" text-anchor="middle">ℛ(A<tspan baseline-shift="super" font-size="18">T</tspan>)</text>
+          <text class="space-name rust-label" x="314" y="543" text-anchor="middle">Nullspace</text>
+          <text class="space-formula rust-label" x="332" y="584" text-anchor="middle">𝒩(A)</text>
+          <text class="space-name teal-label" x="1048" y="133" text-anchor="middle">Column space</text>
+          <text class="space-formula teal-label" x="1048" y="174" text-anchor="middle">ℛ(A)</text>
+          <text class="space-name rust-label" x="951" y="535" text-anchor="middle">Left nullspace</text>
+          <text class="space-formula rust-label" x="951" y="577" text-anchor="middle">𝒩(A<tspan baseline-shift="super" font-size="18">T</tspan>)</text>
+          <path d="M1009 232 L909 324 L880 457" fill="none" stroke="#75858d" stroke-width="1.8" stroke-dasharray="8 8"/>
+          <path d="M980 365 L909 324" fill="none" stroke="#75858d" stroke-width="1.6"/>
+          <path d="M1009 232 C761 151 562 158 334 218" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#pseudo-teal-arrow)"/>
+          <path d="M909 324 C684 281 540 301 334 218" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#pseudo-teal-arrow)"/>
+          <path d="M880 457 C632 379 439 350 245 365" fill="none" stroke="#a25622" stroke-width="3" marker-end="url(#pseudo-rust-arrow)"/>
+          <text class="map-label" x="632" y="144" text-anchor="middle">x̂ = A<tspan baseline-shift="super" font-size="18">†</tspan>y = A<tspan baseline-shift="super" font-size="18">†</tspan>y<tspan baseline-shift="sub" font-size="17">r</tspan></text>
+          <text class="map-label" x="578" y="415" text-anchor="middle">A<tspan baseline-shift="super" font-size="18">†</tspan>y<tspan baseline-shift="sub" font-size="17">n</tspan> = 0</text>
+          <g fill="#172c36"><circle cx="245" cy="365" r="4"/><circle cx="334" cy="218" r="4"/><circle cx="980" cy="365" r="4"/><circle cx="1009" cy="232" r="4"/><circle cx="909" cy="324" r="4"/><circle cx="880" cy="457" r="4"/></g>
+          <text x="224" y="385">0</text><text x="997" y="388">0</text>
+          <text class="point-label" x="297" y="219">x̂</text>
+          <text class="point-label" x="1026" y="251">y<tspan baseline-shift="sub" font-size="18">r</tspan> = Py</text>
+          <text class="point-label" x="875" y="323">y</text>
+          <text class="point-label" x="895" y="481">y<tspan baseline-shift="sub" font-size="18">n</tspan></text>
+        </svg>
+      </div>
+      <figcaption>Reconstructed from the supplied pseudoinverse diagram. Its target <span class="math"><i>b</i></span> is denoted by <span class="math"><i>y</i></span> here, and <span class="math"><i>p</i> = <i>Pb</i></span> becomes <span class="math"><i>y</i><sub>r</sub> = <i>Py</i></span>, with <span class="math"><i>P</i> = <i>AA</i><sup>†</sup></span>. Arrows point from the output space back to the row space. The planes are schematic; on small screens, scroll horizontally.</figcaption>
+    </figure>
+
+    <div class="pseudo-definition">
+      <h3>Definition: minimum norm among least-squares solutions</h3>
+      <p>Following the supplied definition, let <span class="math"><i>A</i>: <i>X</i> → <i>Y</i></span> be a bounded linear operator between Hilbert spaces with closed range. For a given target <span class="math"><i>y</i> ∈ <i>Y</i></span>, define the pseudoinverse through two successive steps:</p>
+      <ol>
+        <li><p><strong>First, find the best possible fit to y.</strong> Minimize the output error <span class="math">‖<i>Ax</i> − <i>y</i>‖</span> over all inputs. Let <span class="math"><i>S</i>(<i>y</i>)</span> be the <strong>set of all inputs attaining that smallest error</strong>. This set may contain one input or infinitely many. If y is attainable, S(y) is exactly the set of solutions of Ax = y. Otherwise, it is the set of least-squares solutions.</p></li>
+        <li><p><strong>Then, choose the shortest input among those best fits.</strong> Within S(y), select the unique vector with smallest norm and call it <span class="math">x̂</span>. The pseudoinverse maps y to this particular vector:</p>
+          <div class="display-equation"><math aria-label="x hat equals A dagger y and belongs to the set S of y"><mover><mi>x</mi><mo>^</mo></mover><mo>=</mo><msup><mi>A</mi><mo>†</mo></msup><mi>y</mi><mo>∈</mo><mi>S</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo></math></div>
+          <div class="display-equation"><math aria-label="The norm of x hat is no larger than the norm of any other input in S of y"><mo stretchy="false">‖</mo><mover><mi>x</mi><mo>^</mo></mover><mo stretchy="false">‖</mo><mo>≤</mo><mo stretchy="false">‖</mo><mi>x</mi><mo stretchy="false">‖</mo><mspace width=".6em"/><mtext>for every</mtext><mspace width=".4em"/><mi>x</mi><mo>∈</mo><mi>S</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo></math></div>
+        </li>
+      </ol>
+      <p><strong>Example:</strong> If <span class="math"><i>A</i> = [1 &nbsp; 0]</span> and <span class="math"><i>y</i> = 2</span>, every vector <span class="math">(2, <i>t</i>)<sup>T</sup></span> fits perfectly, so all of them belong to S(2). Among them, <span class="math">x̂ = (2, 0)<sup>T</sup></span> has the smallest norm. Thus <span class="math"><i>A</i><sup>†</sup>2 = (2, 0)<sup>T</sup></span>.</p>
+      <p>For real matrices with the standard Euclidean inner product, this is the <strong>Moore–Penrose pseudoinverse</strong>. Every matrix range is closed, so it exists uniquely for every matrix, including rectangular, rank-deficient, and zero matrices. We use <span class="math"><i>A</i><sup>†</sup></span>; the notation <span class="math"><i>A</i><sup>+</sup></span> is also common.</p>
+    </div>
+
+    <h3>What changes with the shape of A?</h3>
+    <p>Shape constrains what is possible; <strong>rank determines what actually happens</strong>. In every case, an exact solution exists precisely when <span class="math"><i>y</i> ∈ ℛ(<i>A</i>)</span>. Its uniqueness requires <span class="math">𝒩(<i>A</i>) = {0}</span>.</p>
+    <div class="case-scroll"><table class="case-table">
+      <thead><tr><th scope="col">Shape</th><th scope="col">At full possible rank</th><th scope="col">If rank deficient</th></tr></thead>
+      <tbody>
+        <tr><td><span class="math"><i>m</i> &lt; <i>n</i></span><br>More unknowns</td><td>If <span class="math"><i>r</i> = <i>m</i></span>, every target is attainable. Each has infinitely many exact solutions; <span class="math"><i>A</i><sup>†</sup><i>y</i></span> selects the unique minimum-norm one.</td><td>If <span class="math"><i>r</i> &lt; <i>m</i></span>, some targets are unattainable. Every least-squares target still has infinitely many minimizing inputs, and the pseudoinverse selects the minimum-norm one.</td></tr>
+        <tr><td><span class="math"><i>m</i> = <i>n</i></span><br>Square</td><td>If <span class="math"><i>r</i> = <i>n</i></span>, the matrix is invertible: every target has one exact solution and <span class="math"><i>A</i><sup>†</sup> = <i>A</i><sup>−1</sup></span>.</td><td>A singular square matrix has both unattainable targets and a nontrivial nullspace. Attainable targets have infinitely many exact solutions; other targets have infinitely many least-squares minimizers.</td></tr>
+        <tr><td><span class="math"><i>m</i> &gt; <i>n</i></span><br>More equations</td><td>If <span class="math"><i>r</i> = <i>n</i></span>, an attainable target has one exact solution. An unattainable target has one least-squares solution. Both are given by <span class="math"><i>A</i><sup>†</sup><i>y</i></span>.</td><td>If <span class="math"><i>r</i> &lt; <i>n</i></span>, least-squares minimizers are no longer unique. The pseudoinverse selects the unique minimum-norm one.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="hint">In general, all least-squares minimizers are <span class="math"><i>x</i> = <i>A</i><sup>†</sup><i>y</i> + <i>z</i></span> with <span class="math"><i>z</i> ∈ 𝒩(<i>A</i>)</span>. When the target is attainable, these are exactly all solutions of <span class="math"><i>Ax</i> = <i>y</i></span>.</p>
+
+    <section class="lab-step" aria-labelledby="mp-heading">
+      <h3 id="mp-heading">The Moore–Penrose characterization</h3>
+      <p>The unique matrix <span class="math"><i>A</i><sup>†</sup> ∈ ℝ<sup>n × m</sup></span> satisfies four equations:</p>
+      <div class="penrose-equations">
+        <div class="display-equation"><math><mi>A</mi><msup><mi>A</mi><mo>†</mo></msup><mi>A</mi><mo>=</mo><mi>A</mi></math></div>
+        <div class="display-equation"><math><msup><mi>A</mi><mo>†</mo></msup><mi>A</mi><msup><mi>A</mi><mo>†</mo></msup><mo>=</mo><msup><mi>A</mi><mo>†</mo></msup></math></div>
+        <div class="display-equation"><math><msup><mrow><mo>(</mo><mi>A</mi><msup><mi>A</mi><mo>†</mo></msup><mo>)</mo></mrow><mi mathvariant="normal">T</mi></msup><mo>=</mo><mi>A</mi><msup><mi>A</mi><mo>†</mo></msup></math></div>
+        <div class="display-equation"><math><msup><mrow><mo>(</mo><msup><mi>A</mi><mo>†</mo></msup><mi>A</mi><mo>)</mo></mrow><mi mathvariant="normal">T</mi></msup><mo>=</mo><msup><mi>A</mi><mo>†</mo></msup><mi>A</mi></math></div>
+      </div>
+      <p><strong>The dagger † denotes the Moore–Penrose pseudoinverse; the star * denotes the adjoint.</strong> For real matrices, the adjoint is the transpose. The projector identities use the pseudoinverse:</p>
+      <div class="display-equation"><math aria-label="The orthogonal column-space projector is A times A pseudoinverse"><msub><mi>P</mi><mtext>col</mtext></msub><mo>=</mo><mi>A</mi><msup><mi>A</mi><mo>†</mo></msup><mo>,</mo><mspace width=".6em"/><msub><mi>P</mi><mtext>col</mtext></msub><mi>y</mi><mo>=</mo><msub><mi>y</mi><mi>r</mi></msub></math></div>
+      <div class="display-equation"><math aria-label="The orthogonal row-space projector is A pseudoinverse times A"><msub><mi>P</mi><mtext>row</mtext></msub><mo>=</mo><msup><mi>A</mi><mo>†</mo></msup><mi>A</mi><mo>,</mo><mspace width=".6em"/><msub><mi>P</mi><mtext>row</mtext></msub><mi>x</mi><mo>=</mo><msub><mi>x</mi><mi>r</mi></msub></math></div>
+      <p>Each projector is symmetric and idempotent: <span class="math"><i>P</i><sup>T</sup> = <i>P</i></span> and <span class="math"><i>P</i><sup>2</sup> = <i>P</i></span>. The pseudoinverse reverses A between its column space and row space, and sends the entire left nullspace to zero.</p>
+      <p class="hint"><strong>Using the adjoint gives different products.</strong> In general, <span class="math"><i>AA</i><sup>*</sup></span> and <span class="math"><i>A</i><sup>*</sup><i>A</i></span> are not projectors. For example, if <span class="math"><i>A</i> = [2]</span>, both products equal [4], which is not idempotent. Here <span class="math"><i>A</i><sup>†</sup> = [1/2]</span>, so both pseudoinverse products equal [1], the identity projector.</p>
+      <div class="pseudo-formulas">
+        <div><h4>Any rank: singular value decomposition</h4><p>Write <span class="math"><i>A</i> = <i>QΣV</i><sup>T</sup></span>, using orthogonal matrices Q and V.</p><div class="display-equation"><math><msup><mi>A</mi><mo>†</mo></msup><mo>=</mo><mi>V</mi><msup><mi>Σ</mi><mo>†</mo></msup><msup><mi>Q</mi><mi mathvariant="normal">T</mi></msup></math></div><p>Transpose the rectangular diagonal matrix Σ and replace each positive singular value σ by 1/σ; leave zeros as zeros. The symbols Q and V are separate from the RREF-derived basis U.</p></div>
+        <div><h4>Full column rank: r = n</h4><div class="display-equation"><math><msup><mi>A</mi><mo>†</mo></msup><mo>=</mo><msup><mrow><mo>(</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mi>A</mi><mo>)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup></math></div><p>Here A<sup>T</sup>A is invertible. This includes tall matrices with independent columns.</p></div>
+        <div><h4>Full row rank: r = m</h4><div class="display-equation"><math><msup><mi>A</mi><mo>†</mo></msup><mo>=</mo><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><msup><mrow><mo>(</mo><mi>A</mi><msup><mi>A</mi><mi mathvariant="normal">T</mi></msup><mo>)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></math></div><p>Here AA<sup>T</sup> is invertible. This includes wide matrices with independent rows.</p></div>
+        <div><h4>Using the bases already computed above</h4><p>For positive rank, let C = AU. Both U and C have r independent columns.</p><div class="display-equation"><math><msup><mi>A</mi><mo>†</mo></msup><mo>=</mo><mi>U</mi><msup><mrow><mo>(</mo><msup><mi>C</mi><mi mathvariant="normal">T</mi></msup><mi>C</mi><mo>)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><msup><mi>C</mi><mi mathvariant="normal">T</mi></msup></math></div><p>Project y onto the columns of C, then map its coefficients back through U. This is the exact-arithmetic construction used below. If A = 0, set A<sup>†</sup> = 0.</p></div>
+      </div>
+    </section>
+
+    <section class="pseudo-worked" aria-labelledby="pseudo-worked-heading">
+      <h3 id="pseudo-worked-heading">Try a target y with the current A</h3>
+      <p class="hint">This segment uses the matrix entered in the grid above. Changing A and recomputing its subspaces also updates its pseudoinverse.</p>
+      <p id="pseudo-stale" class="status" role="status" aria-live="polite"></p>
+      <div id="pseudo-live" hidden>
+        <p id="pseudo-current-case"></p>
+        <div class="matrix-line">
+          <div class="matrix-block"><p class="math">Current A</p><div id="pseudo-a"></div></div>
+          <div class="matrix-block"><p class="math" id="pinv-label"></p><div id="pinv-matrix"></div></div>
+        </div>
+        <details><summary>Show the column-space projector P = AA<sup>†</sup></summary><div id="column-projector"></div></details>
+        <form id="y-form" novalidate>
+          <p id="y-help" class="hint"></p>
+          <div class="grid-scroll"><table class="entry-grid" aria-label="Components of target y" aria-describedby="y-help"><thead id="y-grid-head"></thead><tbody id="y-grid-body"></tbody></table></div>
+          <div class="lab-actions"><button class="primary" type="submit">Decompose y and compute x</button><button id="use-ax" type="button">Use Ax from the x input above</button></div>
+          <p id="y-error" class="error" role="alert"></p>
+        </form>
+        <p id="y-status" class="status" role="status" aria-live="polite"></p>
+        <figure id="live-pseudo-figure" class="live-pseudo" aria-labelledby="live-pseudo-heading">
+          <h4 id="live-pseudo-heading">Live view: project y, then invert</h4>
+          <p id="live-pseudo-message" class="live-message" role="status" aria-live="polite">Enter a target to update this diagram.</p>
+          <div id="live-pseudo-content" hidden>
+            <div class="diagram-scroll">
+              <svg id="live-pseudo-svg" class="live-pseudo-svg" viewBox="0 0 1100 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="live-pseudo-title live-pseudo-desc">
+                <title id="live-pseudo-title">Live target decomposition and minimum-norm inverse</title>
+                <desc id="live-pseudo-desc">The target decomposes into orthogonal column-space and left-nullspace components. The pseudoinverse maps the target and its column-space projection to the same minimum-norm input, and maps its left-nullspace component to zero.</desc>
+                <defs>
+                  <marker id="live-teal-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#146c6a"/></marker>
+                  <marker id="live-rust-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#a25622"/></marker>
+                  <marker id="live-ink-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#172c36"/></marker>
+                </defs>
+                <text x="70" y="34" class="live-heading">Minimum-norm input</text>
+                <text x="680" y="34" class="live-heading">Target decomposition</text>
+                <path d="M110 270 L70 190 L300 95 L410 180 Z" fill="#e9f5f3" stroke="#a0c6bf" stroke-width="1.2"/>
+                <path d="M110 270 L70 300 L255 405 L350 340 Z" fill="#fcf1e7" stroke="#d5b99f" stroke-width="1.2"/>
+                <path d="M740 235 L680 155 L865 55 L1005 135 Z" fill="#e9f5f3" stroke="#a0c6bf" stroke-width="1.2"/>
+                <path d="M740 235 L680 295 L900 405 L1040 345 Z" fill="#fcf1e7" stroke="#d5b99f" stroke-width="1.2"/>
+                <text x="200" y="116" class="live-space teal-text">Row space</text>
+                <text x="205" y="372" class="live-space rust-text">Nullspace</text>
+                <text x="815" y="88" class="live-space teal-text">Column space</text>
+                <text x="860" y="400" class="live-space rust-text">Left nullspace</text>
+                <path id="live-to-x-from-yr" fill="none" stroke="#146c6a" stroke-width="2.5" marker-end="url(#live-teal-arrow)"/>
+                <path id="live-to-x-from-y" fill="none" stroke="#146c6a" stroke-width="2.5" marker-end="url(#live-teal-arrow)"/>
+                <path id="live-to-zero" fill="none" stroke="#a25622" stroke-width="2.5" marker-end="url(#live-rust-arrow)"/>
+                <text x="510" y="133" class="live-symbol">A<tspan baseline-shift="super" font-size="18">†</tspan></text>
+                <text x="470" y="353" class="live-space live-path-label rust-text">A†yₙ = 0</text>
+                <path id="live-construction" fill="none" stroke="#75858d" stroke-width="1.5" stroke-dasharray="7 7"/>
+                <path id="live-vector-yr" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#live-teal-arrow)"/>
+                <path id="live-vector-yn" fill="none" stroke="#a25622" stroke-width="3" marker-end="url(#live-rust-arrow)"/>
+                <path id="live-vector-y" fill="none" stroke="#172c36" stroke-width="2.2" marker-end="url(#live-ink-arrow)"/>
+                <path id="live-vector-x" fill="none" stroke="#146c6a" stroke-width="3" marker-end="url(#live-teal-arrow)"/>
+                <circle cx="110" cy="270" r="4" fill="#172c36"/><circle cx="740" cy="235" r="4" fill="#172c36"/>
+                <circle id="live-point-x" r="5" fill="#146c6a"/><circle id="live-point-yr" r="5" fill="#146c6a"/>
+                <circle id="live-point-yn" r="5" fill="#a25622"/><circle id="live-point-y" r="5" fill="#172c36"/>
+                <text x="89" y="289" class="live-origin">0</text><text x="719" y="254" class="live-origin">0</text>
+                <text id="live-label-x" class="live-symbol teal-text">x̂</text>
+                <text id="live-label-yr" class="live-symbol teal-text">yᵣ</text>
+                <text id="live-label-yn" class="live-symbol rust-text">yₙ</text>
+                <text id="live-label-y" class="live-symbol">y</text>
+              </svg>
+            </div>
+            <div class="live-norms"><span id="live-norm-y"></span><span id="live-norm-yr"></span><span id="live-norm-yn"></span><span id="live-norm-x"></span></div>
+            <div class="live-vectors" aria-label="Exact vectors in the live diagram">
+              <div><p class="math">y</p><div id="live-values-y"></div></div>
+              <div><p class="math">y<sub>r</sub> = AA<sup>†</sup>y</p><div id="live-values-yr"></div></div>
+              <div><p class="math">y<sub>n</sub> = y − y<sub>r</sub></p><div id="live-values-yn"></div></div>
+              <div><p class="math">x̂ = A<sup>†</sup>y</p><div id="live-values-x"></div></div>
+            </div>
+          </div>
+          <figcaption>Updates as you edit the y input above. The output view is a two-dimensional slice along the current orthogonal directions y<sub>r</sub> and y<sub>n</sub>; those directions adapt to the target. Arrow lengths within the output space are proportional to the component norms. Input and output spaces scale independently to fit. Exact coordinates above show every component and its sign. On small screens, scroll the drawing horizontally.</figcaption>
+        </figure>
+        <div id="pseudo-results" hidden>
+          <p id="target-classification" class="answer-note"></p>
+          <div class="decomp-equation" aria-label="y equals y r plus y n">
+            <div class="component"><p class="math">y</p><div id="y-output"></div></div><span class="operator">=</span>
+            <div class="component"><p class="math">y<sub>r</sub> = Py ∈ ℛ(A)</p><div id="yr-output"></div></div><span class="operator">+</span>
+            <div class="component"><p class="math">y<sub>n</sub> ∈ 𝒩(A<sup>T</sup>)</p><div id="yn-output"></div></div>
+          </div>
+          <h4>The inverse map within the row space</h4>
+          <p id="inverse-coordinate-formula" class="math">c = (C<sup>T</sup>C)<sup>−1</sup>C<sup>T</sup>y, &nbsp; y<sub>r</sub> = Cc, &nbsp; x̂ = Uc = A<sup>†</sup>y = A<sup>†</sup>y<sub>r</sub>.</p>
+          <div class="matrix-line">
+            <div class="matrix-block"><p class="math">c: column-space coordinates of y<sub>r</sub></p><div id="inverse-coordinates"></div></div>
+            <div class="matrix-block"><p class="math">x̂ = A<sup>†</sup>y: minimum-norm input</p><div id="inverse-x"></div></div>
+            <div class="matrix-block"><p class="math">Ax̂ = y<sub>r</sub></p><div id="recovered-y"></div></div>
+          </div>
+          <p id="zero-inverse-note" class="hint" hidden>A is zero: y<sub>r</sub> = 0, y<sub>n</sub> = y, and x̂ = 0. The coordinate vector is empty, and no Gram matrix is inverted.</p>
+          <div class="checks">
+            <div class="check"><p class="math">A<sup>T</sup>y<sub>n</sub> = 0</p><div id="left-null-check"></div></div>
+            <div class="check"><p class="math">A<sup>†</sup>y<sub>n</sub> = 0</p><div id="discarded-y-check"></div></div>
+            <div class="check"><p class="math">N<sup>T</sup>x̂ = 0</p><div id="minnorm-check"></div><p class="hint">The chosen input is orthogonal to every nullspace basis vector.</p></div>
+            <div class="check"><p class="math">y<sub>r</sub><sup>T</sup>y<sub>n</sub> = <span id="y-dot-check"></span></p><p id="least-squares-residual" class="hint"></p></div>
+          </div>
+          <p class="hint">The residual is <span class="math"><i>y</i> − <i>Ax̂</i> = <i>y</i><sub>n</sub></span>. Every other least-squares minimizer is <span class="math">x̂ + <i>Nz</i></span>. Since <span class="math">x̂ ⟂ ℛ(<i>N</i>)</span>, adding a nonzero nullspace component increases the input norm.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+  <footer>Based on the supplied geometric diagrams and definitions. All matrix calculations use real vector spaces with the standard Euclidean inner product.</footer>
+</main>
+<script>
+'use strict';
+// Exact arithmetic keeps rank decisions, nullspaces, and projections consistent.
+const SubspaceMath = (() => {
+  const abs = a => a < 0n ? -a : a;
+  function gcd(a, b) { a = abs(a); b = abs(b); while (b) [a, b] = [b, a % b]; return a; }
+  function q(a, b = 1n) {
+    if (!b) throw new Error('A denominator cannot be zero.');
+    if (b < 0n) { a = -a; b = -b; }
+    const d = gcd(a, b); return {a: a / d, b: b / d};
+  }
+  const zero = () => q(0n);
+  const one = () => q(1n);
+  const neg = x => q(-x.a, x.b);
+  const add = (x, y) => q(x.a * y.b + y.a * x.b, x.b * y.b);
+  const sub = (x, y) => add(x, neg(y));
+  const mul = (x, y) => q(x.a * y.a, x.b * y.b);
+  const div = (x, y) => q(x.a * y.b, x.b * y.a);
+  const isZero = x => x.a === 0n;
+  const str = x => x.b === 1n ? String(x.a) : `${x.a}/${x.b}`;
+  function scalar(text) {
+    const s = text.trim();
+    if (!s) throw new Error('Enter a value in every cell.');
+    if (s.length > 64) throw new Error('Use at most 64 characters per entry.');
+    const parts = s.split('/');
+    if (parts.length > 2) throw new Error('Use a number or a fraction such as -2/3.');
+    function decimal(value) {
+      const match = value.trim().match(/^([+-]?)(\d+(?:\.\d*)?|\.\d+)(?:[eE]([+-]?\d+))?$/);
+      if (!match) throw new Error('Use a number or a fraction such as -2/3.');
+      const exponent = Number(match[3] || 0);
+      if (Math.abs(exponent) > 24) throw new Error('Scientific notation exponents must be between -24 and 24.');
+      const digits = match[2].replace('.', '');
+      if (digits.length > 24) throw new Error('Use at most 24 digits in each number.');
+      const places = (match[2].split('.')[1] || '').length - exponent;
+      let a = BigInt(digits) * (match[1] === '-' ? -1n : 1n);
+      return places >= 0 ? q(a, 10n ** BigInt(places)) : q(a * 10n ** BigInt(-places));
+    }
+    return parts.length === 2 ? div(decimal(parts[0]), decimal(parts[1])) : decimal(s);
+  }
+  const zeros = (m, n) => Array.from({length: m}, () => Array.from({length: n}, zero));
+  const transpose = A => A[0].map((_, j) => A.map(row => row[j]));
+  function multiply(A, B) {
+    const k = A[0].length, cols = B.length ? B[0].length : 0;
+    if (k !== B.length) throw new Error('Matrix dimensions do not match.');
+    return A.map(row => Array.from({length: cols}, (_, j) => row.reduce((s, x, i) => add(s, mul(x, B[i][j])), zero())));
+  }
+  function rref(A) {
+    const R = A.map(row => row.slice()), m = R.length, n = R[0].length;
+    const pivots = [], operations = [];
+    let row = 0;
+    for (let col = 0; col < n && row < m; col++) {
+      let p = row;
+      while (p < m && isZero(R[p][col])) p++;
+      if (p === m) continue;
+      if (p !== row) { [R[p], R[row]] = [R[row], R[p]]; operations.push(`Swap R${row + 1} and R${p + 1}.`); }
+      const pivot = R[row][col];
+      if (str(pivot) !== '1') {
+        R[row] = R[row].map(x => div(x, pivot));
+        operations.push(`R${row + 1} ← R${row + 1} / (${str(pivot)}).`);
+      }
+      for (let i = 0; i < m; i++) {
+        if (i === row || isZero(R[i][col])) continue;
+        const factor = R[i][col];
+        R[i] = R[i].map((x, j) => sub(x, mul(factor, R[row][j])));
+        operations.push(`R${i + 1} ← R${i + 1} − (${str(factor)}) R${row + 1}.`);
+      }
+      pivots.push(col); row++;
+    }
+    return {matrix: R, pivots, operations};
+  }
+  function minusOne(reduction) {
+    const {matrix: R, pivots} = reduction, n = R[0].length;
+    const free = Array.from({length: n}, (_, i) => i).filter(i => !pivots.includes(i));
+    const K = zeros(n, n);
+    pivots.forEach((p, i) => { K[p] = R[i].slice(); });
+    free.forEach(j => { K[j][j] = neg(one()); });
+    const basis = K.map(row => free.map(j => row[j]));
+    return {completed: K, basis, free};
+  }
+  function analyze(A) {
+    const m = A.length, n = A[0].length;
+    const reduction = rref(A), rank = reduction.pivots.length;
+    const U = Array.from({length: n}, (_, j) => reduction.matrix.slice(0, rank).map(row => row[j]));
+    const nullspace = minusOne(reduction), C = multiply(A, U);
+    const leftReduction = rref(transpose(A)), leftNullspace = minusOne(leftReduction);
+    return {A, m, n, rank, reduction, U, C, nullspace, leftReduction, leftNullspace};
+  }
+  function decompose(model, x) {
+    const {A, U, n, rank} = model;
+    let G = [], b = [], c = [], xr = zeros(n, 1);
+    if (rank) {
+      const UT = transpose(U);
+      G = multiply(UT, U); b = multiply(UT, x);
+      const solved = rref(G.map((row, i) => [...row, b[i][0]])).matrix;
+      c = solved.map(row => [row[rank]]);
+      xr = multiply(U, c);
+    }
+    const xn = x.map((row, i) => [sub(row[0], xr[i][0])]);
+    const Ax = multiply(A, x), Axr = multiply(A, xr), Axn = multiply(A, xn);
+    const UTxn = rank ? multiply(transpose(U), xn) : [];
+    const dot = xr.reduce((s, row, i) => add(s, mul(row[0], xn[i][0])), zero());
+    return {x, xr, xn, G, b, c, Ax, Axr, Axn, UTxn, dot};
+  }
+  function pseudoinverse(model) {
+    const {A, U, C, m, n, rank: r} = model;
+    let G = [], W = [], Ad = zeros(n, m);
+    if (r) {
+      const CT = transpose(C);
+      G = multiply(CT, C);
+      // Solve all right-hand sides at once: (C^T C) W = C^T.
+      W = rref(G.map((row, i) => [...row, ...CT[i]])).matrix.map(row => row.slice(r));
+      Ad = multiply(U, W);
+    }
+    return {G, W, Ad, P: multiply(A, Ad), T: multiply(Ad, A)};
+  }
+  function inverseMap(model, y) {
+    const p = model.pseudo || pseudoinverse(model);
+    const yr = multiply(p.P, y), yn = y.map((row, i) => [sub(row[0], yr[i][0])]);
+    const x = multiply(p.Ad, y), Ax = multiply(model.A, x);
+    const c = model.rank ? multiply(p.W, y) : [];
+    const normal = multiply(transpose(model.A), yn), discarded = multiply(p.Ad, yn);
+    const N = model.nullspace.basis;
+    const NTx = N[0].length ? multiply(transpose(N), x) : [];
+    const dot = yr.reduce((s, row, i) => add(s, mul(row[0], yn[i][0])), zero());
+    const residualSquared = yn.reduce((s, row) => add(s, mul(row[0], row[0])), zero());
+    return {y, yr, yn, x, Ax, c, normal, discarded, NTx, dot, residualSquared, attainable: yn.every(row => isZero(row[0]))};
+  }
+  return {q, zero, one, add, sub, mul, div, neg, isZero, str, scalar, zeros, transpose, multiply, rref, minusOne, analyze, decompose, pseudoinverse, inverseMap};
+})();
+
+// Interface: inputs stay local; rendered results always match the current grid.
+(() => {
+  const M = SubspaceMath, byId = id => document.getElementById(id);
+  const example = [['1','2','0','1'], ['0','0','1','1'], ['1','2','1','2']];
+  let gridRows = 3, gridCols = 4, model = null;
+  let savedVector = ['1','0','2','-1'];
+  let savedY = ['1','0','0'];
+  let yUpdateTimer = null;
+  const readStrings = () => Array.from(byId('matrix-grid-body').rows, row => Array.from(row.querySelectorAll('input'), input => input.value));
+  const vectorStrings = () => Array.from(byId('vector-grid-body').querySelectorAll('input'), input => input.value);
+  function invalidate() {
+    clearTimeout(yUpdateTimer);
+    model = null;
+    byId('subspace-results').hidden = true;
+    byId('decomp-results').hidden = true;
+    byId('pseudo-live').hidden = true;
+    byId('pseudo-results').hidden = true;
+    byId('pseudo-stale').textContent = 'The matrix has changed. Compute subspaces above to update the pseudoinverse.';
+    byId('lab-status').textContent = 'The matrix has changed. Compute subspaces to update the results.';
+  }
+  function buildGrid(values) {
+    const head = byId('matrix-grid-head'), body = byId('matrix-grid-body');
+    head.replaceChildren(); body.replaceChildren();
+    const heading = document.createElement('tr');
+    for (let j = -1; j < gridCols; j++) {
+      const th = document.createElement('th'); th.scope = 'col'; th.textContent = j < 0 ? 'A' : j + 1;
+      heading.append(th);
+    }
+    head.append(heading);
+    for (let i = 0; i < gridRows; i++) {
+      const row = document.createElement('tr'), th = document.createElement('th');
+      th.scope = 'row'; th.textContent = i + 1; row.append(th);
+      for (let j = 0; j < gridCols; j++) {
+        const cell = document.createElement('td'), input = document.createElement('input');
+        input.type = 'text'; input.value = values[i]?.[j] ?? '0';
+        input.setAttribute('aria-label', `A row ${i + 1}, column ${j + 1}`);
+        input.autocomplete = 'off'; input.spellcheck = false;
+        input.dataset.row = i; input.dataset.col = j;
+        input.addEventListener('input', () => { input.removeAttribute('aria-invalid'); byId('matrix-error').textContent = ''; invalidate(); });
+        input.addEventListener('paste', pasteBlock);
+        cell.append(input); row.append(cell);
+      }
+      body.append(row);
+    }
+  }
+  function dimensions() {
+    const m = Number(byId('matrix-rows').value), n = Number(byId('matrix-cols').value);
+    if (!Number.isInteger(m) || !Number.isInteger(n) || m < 1 || n < 1 || m > 10 || n > 10) throw new Error('Choose integer row and column counts from 1 to 10.');
+    return [m, n];
+  }
+  function resize() {
+    try {
+      const [m, n] = dimensions(), values = readStrings();
+      gridRows = m; gridCols = n;
+      buildGrid(values); byId('matrix-error').textContent = ''; invalidate();
+    } catch (error) { byId('matrix-error').textContent = error.message; }
+  }
+  function pasteBlock(event) {
+    const text = event.clipboardData?.getData('text/plain') || '';
+    if (!/[\s,;]/.test(text.trim())) return;
+    event.preventDefault();
+    const block = text.trim().split(/\r?\n|;/).filter(row => row.trim()).map(row => row.trim().split(/[\s,]+/));
+    const startRow = Number(event.target.dataset.row), startCol = Number(event.target.dataset.col);
+    if (!block.length || block.some(row => row.length !== block[0].length)) {
+      byId('matrix-error').textContent = 'Paste a rectangular block: one row per line, with tabs, spaces, or commas between entries.'; return;
+    }
+    const rows = startRow + block.length, cols = startCol + block[0].length;
+    if (rows > 10 || cols > 10) { byId('matrix-error').textContent = 'The pasted block would exceed the 10 × 10 limit.'; return; }
+    const values = readStrings();
+    gridRows = Math.max(gridRows, rows); gridCols = Math.max(gridCols, cols);
+    for (let i = 0; i < block.length; i++) {
+      values[startRow + i] ??= [];
+      block[i].forEach((value, j) => { values[startRow + i][startCol + j] = value; });
+    }
+    byId('matrix-rows').value = gridRows; byId('matrix-cols').value = gridCols;
+    buildGrid(values); byId('matrix-error').textContent = ''; invalidate();
+  }
+  function numberHTML(value) {
+    if (value.b === 1n) return String(value.a).replace('-', '−');
+    const a = String(value.a).replace('-', '−'), b = String(value.b);
+    const approx = Number(value.a) / Number(value.b);
+    const label = Number.isFinite(approx) ? `Approximately ${approx.toPrecision(9)}` : 'Exact fraction';
+    return `<span class="fraction" title="${label}" aria-label="${a} divided by ${b}"><span class="numerator">${a}</span><span class="denominator">${b}</span></span>`;
+  }
+  function matrixHTML(A, label, options = {}) {
+    if (!A.length || !A[0].length) return `<span class="basis-empty">${options.empty || 'Empty basis ∅ — this subspace is {0}.'}</span>`;
+    let html = `<div class="matrix-scroll"><div class="matrix-shell"><table class="number-matrix" aria-label="${label}">`;
+    const colClass = j => options.free?.includes(j) ? 'free' : options.pivots?.includes(j) ? 'pivot' : '';
+    if (options.headers) html += '<thead><tr>' + A[0].map((_, j) => `<th scope="col" class="${colClass(j)}">${j + 1}</th>`).join('') + '</tr></thead>';
+    html += '<tbody>' + A.map((row, i) => '<tr>' + row.map((value, j) => `<td class="${colClass(j)} ${options.pivots?.[i] === j ? 'pivot-entry' : ''}">${numberHTML(value)}</td>`).join('') + '</tr>').join('') + '</tbody></table></div></div>';
+    return html;
+  }
+  const putMatrix = (id, A, label, options) => { byId(id).innerHTML = matrixHTML(A, label, options); };
+  const listColumns = columns => columns.length ? columns.map(j => j + 1).join(', ') : 'none';
+  function buildVector() {
+    const previous = vectorStrings();
+    if (previous.length) savedVector = previous;
+    const head = document.createElement('tr'), row = document.createElement('tr');
+    for (let j = 0; j < model.n; j++) {
+      const th = document.createElement('th'); th.scope = 'col'; th.textContent = `x${j + 1}`; head.append(th);
+      const td = document.createElement('td'), input = document.createElement('input');
+      input.type = 'text'; input.value = savedVector[j] ?? '0'; input.autocomplete = 'off'; input.spellcheck = false;
+      input.setAttribute('aria-label', `x component ${j + 1}`);
+      input.addEventListener('input', () => {
+        input.removeAttribute('aria-invalid'); byId('vector-error').textContent = ''; byId('decomp-results').hidden = true;
+        byId('vector-status').textContent = 'The vector has changed. Decompose x to update the results.';
+      });
+      td.append(input); row.append(td);
+    }
+    byId('vector-grid-head').replaceChildren(head); byId('vector-grid-body').replaceChildren(row);
+    byId('vector-help').innerHTML = `Enter the ${model.n} components of <span class="math">x ∈ ℝ<sup>${model.n}</sup></span>. Use the same number formats as the matrix cells.`;
+  }
+  function renderSubspaces() {
+    const {A, m, n, rank: r, reduction, U, C, nullspace, leftReduction, leftNullspace} = model;
+    byId('rank-description').textContent = `${m} × ${n} matrix · rank r = ${r}. Pivot columns: ${listColumns(reduction.pivots)}. Free columns: ${listColumns(nullspace.free)}.`;
+    putMatrix('original-matrix', A, 'Original matrix A');
+    putMatrix('rref-matrix', reduction.matrix, 'Reduced row echelon form of A', {headers: true, pivots: reduction.pivots, free: nullspace.free});
+    const ops = reduction.operations.length ? reduction.operations : ['A is already in reduced row echelon form.'];
+    byId('row-operations').replaceChildren(...ops.map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
+    byId('u-label').textContent = `U: ${n} × ${r} · row-space dimension ${r}`;
+    putMatrix('row-basis', U, 'U, columns form a row-space basis');
+    putMatrix('minus-one-matrix', nullspace.completed, 'Completed minus-one-trick matrix K', {headers: true, free: nullspace.free});
+    byId('n-label').textContent = `N: ${n} × ${n - r} · nullspace dimension ${n - r}`;
+    putMatrix('null-basis', nullspace.basis, 'N, columns form a nullspace basis');
+    byId('null-description').textContent = nullspace.free.length
+      ? `Read columns ${listColumns(nullspace.free)} of K. In each basis vector, one free variable equals −1 and the other free variables equal 0. The pivot equations determine the remaining entries, so AN = 0.`
+      : 'There are no free columns. The nullspace is {0}, whose basis is empty.';
+    byId('c-label').textContent = `C = AU: ${m} × ${r} · column-space dimension ${r}`;
+    putMatrix('column-basis', C, 'C equals A U, columns form a column-space basis');
+    putMatrix('transpose-rref', leftReduction.matrix, 'Reduced row echelon form of A transpose', {headers: true, pivots: leftReduction.pivots, free: leftNullspace.free});
+    byId('l-label').textContent = `L: ${m} × ${m - r} · left-nullspace dimension ${m - r}`;
+    putMatrix('left-basis', leftNullspace.basis, 'L, columns form a left-nullspace basis');
+    putMatrix('left-minus-one-matrix', leftNullspace.completed, 'Completed minus-one-trick matrix for A transpose', {headers: true, free: leftNullspace.free});
+    buildVector();
+    byId('subspace-results').hidden = false;
+    byId('lab-status').textContent = `Subspaces computed. Rank ${r}; row, null, column, and left-null dimensions: ${r}, ${n-r}, ${r}, ${m-r}.`;
+  }
+  function readCell(input, location) {
+    try { const value = M.scalar(input.value); input.removeAttribute('aria-invalid'); return value; }
+    catch (error) { input.setAttribute('aria-invalid', 'true'); input.focus(); throw new Error(`${location}: ${error.message}`); }
+  }
+  function compute(event) {
+    event?.preventDefault();
+    clearTimeout(yUpdateTimer);
+    byId('matrix-error').textContent = ''; byId('subspace-results').hidden = true; model = null;
+    byId('pseudo-live').hidden = true;
+    try {
+      const [m, n] = dimensions();
+      if (m !== gridRows || n !== gridCols) throw new Error('The counts differ from the grid. Click Resize grid to apply them, then compute.');
+      const A = Array.from(byId('matrix-grid-body').rows, (row, i) => Array.from(row.querySelectorAll('input'), (input, j) => readCell(input, `A(${i+1}, ${j+1})`)));
+      model = M.analyze(A); model.pseudo = M.pseudoinverse(model);
+      renderSubspaces(); decompose(); renderPseudoinverse(); invertY();
+    } catch (error) { byId('matrix-error').textContent = error.message; byId('lab-status').textContent = 'Update the matrix entries and compute again.'; }
+  }
+  function decompose(event) {
+    event?.preventDefault();
+    byId('vector-error').textContent = ''; byId('decomp-results').hidden = true;
+    if (!model) return;
+    try {
+      const x = Array.from(byId('vector-grid-body').querySelectorAll('input'), (input, j) => [readCell(input, `x${j+1}`)]);
+      savedVector = vectorStrings();
+      const d = M.decompose(model, x);
+      byId('projection-method').innerHTML = model.rank
+        ? 'The columns of U need not be orthonormal. Project using <span class="math">x<sub>r</sub> = U(U<sup>T</sup>U)<sup>−1</sup>U<sup>T</sup>x</span>, then set <span class="math">x<sub>n</sub> = x − x<sub>r</sub></span>. The calculation below solves the equivalent system for the coefficients c.'
+        : 'A is the zero matrix, so the row space is {0}. Its projection is xᵣ = 0, and xₙ = x. No matrix inverse is needed.';
+      putMatrix('x-output', d.x, 'Input x'); putMatrix('xr-output', d.xr, 'Row-space projection x r'); putMatrix('xn-output', d.xn, 'Nullspace component x n');
+      putMatrix('gram-output', d.G, 'Gram matrix U transpose U', {empty: '0 × 0 matrix — no coefficients to solve for.'});
+      putMatrix('rhs-output', d.b, 'Projection right-hand side U transpose x', {empty: 'Empty vector.'});
+      putMatrix('coeff-output', d.c, 'Row-space coordinates c', {empty: 'Empty vector.'});
+      putMatrix('kernel-check', d.Axn, 'A x n, the zero vector');
+      putMatrix('orthogonal-check', d.UTxn, 'U transpose x n, the zero vector', {empty: 'No row-space basis vectors; the condition is vacuous.'});
+      byId('image-check').innerHTML = `<div class="matrix-line">${matrixHTML(d.Ax, 'A x')}<span class="math">=</span>${matrixHTML(d.Axr, 'A x r')}</div>`;
+      byId('dot-check').textContent = M.str(d.dot);
+      byId('decomp-results').hidden = false;
+      byId('vector-status').textContent = 'Decomposition computed exactly. The components sum to x, are orthogonal, and A xₙ = 0.';
+    } catch (error) { byId('vector-error').textContent = error.message; byId('vector-status').textContent = 'Update the vector entries and decompose again.'; }
+  }
+  function renderPseudoinverse() {
+    clearTimeout(yUpdateTimer);
+    const {A, m, n, rank: r, pseudo} = model;
+    const shape = m < n ? 'wide (m < n)' : m > n ? 'tall (m > n)' : 'square (m = n)';
+    let behavior;
+    if (r === n && r === m) behavior = 'A is invertible; its pseudoinverse is its ordinary inverse.';
+    else if (r === m) behavior = 'A has full row rank. Every target is attainable, and the pseudoinverse chooses its minimum-norm input.';
+    else if (r === n) behavior = 'A has full column rank. Every target has a unique least-squares input; it is exact precisely when the target lies in the column space.';
+    else behavior = `A is rank deficient. Only targets in its ${r}-dimensional column space are attainable, and its nullspace has dimension ${n-r}.`;
+    byId('pseudo-current-case').textContent = `Current A is ${m} × ${n}, ${shape}, with rank ${r}. ${behavior}`;
+    putMatrix('pseudo-a', A, 'Current matrix A for the inverse map');
+    byId('pinv-label').innerHTML = `A<sup>†</sup>: ${n} × ${m}`;
+    putMatrix('pinv-matrix', pseudo.Ad, 'Moore Penrose pseudoinverse A dagger');
+    putMatrix('column-projector', pseudo.P, 'Orthogonal projector A A dagger onto the column space');
+    const previous = Array.from(byId('y-grid-body').querySelectorAll('input'), input => input.value);
+    if (previous.length) savedY = previous;
+    const head = document.createElement('tr'), row = document.createElement('tr');
+    for (let j = 0; j < m; j++) {
+      const th = document.createElement('th'); th.scope = 'col'; th.textContent = `y${j+1}`; head.append(th);
+      const td = document.createElement('td'), input = document.createElement('input');
+      input.type = 'text'; input.value = savedY[j] ?? '0'; input.autocomplete = 'off'; input.spellcheck = false;
+      input.setAttribute('aria-label', `y component ${j+1}`);
+      input.addEventListener('input', () => {
+        input.removeAttribute('aria-invalid'); byId('y-error').textContent = ''; byId('pseudo-results').hidden = true;
+        byId('y-status').textContent = 'Updating the target decomposition…';
+        byId('live-pseudo-message').textContent = 'Updating the live diagram…';
+        byId('live-pseudo-content').setAttribute('aria-busy', 'true');
+        clearTimeout(yUpdateTimer);
+        yUpdateTimer = setTimeout(() => invertY(undefined, {live: true}), 160);
+      });
+      td.append(input); row.append(td);
+    }
+    byId('y-grid-head').replaceChildren(head); byId('y-grid-body').replaceChildren(row);
+    byId('y-help').innerHTML = `Enter the ${m} components of the target <span class="math">y ∈ ℝ<sup>${m}</sup></span>. Fractions and decimals are accepted. The live diagram and results update as you type.`;
+    byId('pseudo-stale').textContent = '';
+    byId('pseudo-live').hidden = false;
+  }
+  function logVectorNorm(vector) {
+    // Work with logarithms so very large exact fractions still draw finitely.
+    function logInteger(value) {
+      const digits = (value < 0n ? -value : value).toString();
+      const head = digits.slice(0, 15);
+      return Math.log(Number(head)) + (digits.length - head.length) * Math.LN10;
+    }
+    const logs = vector.map(row => M.isZero(row[0]) ? -Infinity : logInteger(row[0].a) - logInteger(row[0].b));
+    const largest = Math.max(...logs);
+    return largest === -Infinity ? -Infinity : largest + Math.log(logs.reduce((sum, v) => sum + Math.exp(2 * (v - largest)), 0)) / 2;
+  }
+  function normLabel(logNorm) {
+    if (logNorm === -Infinity) return '0';
+    const exponent = Math.floor(logNorm / Math.LN10);
+    if (exponent >= -3 && exponent <= 4) return String(Number(Math.exp(logNorm).toPrecision(4)));
+    return `${Number(Math.exp(logNorm - exponent * Math.LN10).toPrecision(4))} × 10^${exponent}`;
+  }
+  function updateLiveDiagram(d) {
+    const logY = logVectorNorm(d.y), logR = logVectorNorm(d.yr), logN = logVectorNorm(d.yn), logX = logVectorNorm(d.x);
+    const scaleY = Math.max(0, logR, logN), scaleX = Math.max(0, logX);
+    const r = 190 * Math.exp(logR - scaleY), n = 190 * Math.exp(logN - scaleY);
+    const x = 220 * Math.exp(logX - scaleX), root2 = Math.SQRT2;
+    const originX = [110, 270], originY = [740, 235];
+    const pR = [740 + r/root2, 235 - r/root2];
+    const pN = [740 + n/root2, 235 + n/root2];
+    const pY = [740 + (r+n)/root2, 235 + (n-r)/root2];
+    const pX = [110 + x/Math.hypot(1, .42), 270 - .42*x/Math.hypot(1, .42)];
+    const zeroR = d.yr.every(row => M.isZero(row[0])), zeroN = d.yn.every(row => M.isZero(row[0]));
+    const zeroX = d.x.every(row => M.isZero(row[0])), zeroY = zeroR && zeroN;
+    const pt = p => p.map(v => v.toFixed(3)).join(' ');
+    const show = (id, visible) => byId(id).toggleAttribute('hidden', !visible);
+    const path = (id, value, visible = true) => { byId(id).setAttribute('d', value); show(id, visible); };
+    function point(id, p, visible) { byId(id).setAttribute('cx', p[0]); byId(id).setAttribute('cy', p[1]); show(id, visible); }
+    function label(id, p, text, visible = true) { byId(id).setAttribute('x', p[0]); byId(id).setAttribute('y', p[1]); byId(id).textContent = text; show(id, visible); }
+    path('live-vector-yr', `M${pt(originY)} L${pt(pR)}`, !zeroR);
+    path('live-vector-yn', `M${pt(originY)} L${pt(pN)}`, !zeroN);
+    path('live-vector-y', `M${pt(originY)} L${pt(pY)}`, !zeroY && !zeroR && !zeroN);
+    path('live-vector-x', `M${pt(originX)} L${pt(pX)}`, !zeroX);
+    path('live-construction', `M${pt(pR)} L${pt(pY)} L${pt(pN)}`, !zeroR && !zeroN);
+    path('live-to-x-from-yr', `M${pt(pR)} C610 95 455 120 ${pt(pX)}`, !zeroR && !zeroN);
+    path('live-to-x-from-y', `M${pt(pY)} C600 240 430 260 ${pt(pX)}`, !zeroY);
+    path('live-to-zero', `M${pt(pN)} C580 360 340 330 ${pt(originX)}`, !zeroN);
+    point('live-point-x', pX, !zeroX); point('live-point-yr', pR, !zeroR);
+    point('live-point-yn', pN, !zeroN); point('live-point-y', pY, !zeroY && !zeroR && !zeroN);
+    label('live-label-x', [pX[0]+14, pX[1]-12], zeroX ? 'x̂ = 0' : 'x̂');
+    label('live-label-yr', [pR[0]+10, pR[1]-20], 'yᵣ', !zeroR && !zeroN);
+    label('live-label-yn', [pN[0]+10, pN[1]+36], 'yₙ', !zeroN && !zeroR);
+    label('live-label-y', [pY[0]+14, pY[1]+(zeroY ? -16 : 8)], zeroY ? 'y = yᵣ = yₙ = 0' : zeroN ? 'y = yᵣ' : zeroR ? 'y = yₙ' : 'y');
+    for (const [key, value, logNorm] of [['y', d.y, logY], ['yr', d.yr, logR], ['yn', d.yn, logN], ['x', d.x, logX]]) {
+      putMatrix(`live-values-${key}`, value, `Exact live vector ${key}`);
+      const symbol = {y:'y', yr:'yᵣ', yn:'yₙ', x:'x̂'}[key];
+      byId(`live-norm-${key}`).textContent = `‖${symbol}‖${logNorm === -Infinity ? ' = 0' : ' ≈ ' + normLabel(logNorm)}`;
+    }
+    const coordinates = vector => '(' + vector.map(row => M.str(row[0])).join(', ') + ')';
+    byId('live-pseudo-desc').textContent = `For the current target y = ${coordinates(d.y)}, the column-space projection is y r = ${coordinates(d.yr)}, the left-nullspace component is y n = ${coordinates(d.yn)}, and the minimum-norm input is x hat = ${coordinates(d.x)}. Output directions adapt to the target; input and output scales are independent.`;
+    byId('live-pseudo-message').textContent = zeroY ? 'Zero target: both components and the minimum-norm input are zero.'
+      : zeroN ? 'Attainable target: yₙ = 0. The pseudoinverse maps y = yᵣ to the minimum-norm input x̂.'
+      : zeroR ? 'The target lies entirely in the left nullspace: yᵣ = 0 and x̂ = 0.'
+      : 'The target splits into orthogonal components. Both y and yᵣ map to x̂; yₙ maps to zero.';
+    byId('live-pseudo-content').hidden = false;
+    byId('live-pseudo-content').removeAttribute('aria-busy');
+  }
+  function pauseLiveDiagram(message) {
+    byId('live-pseudo-content').hidden = true;
+    byId('live-pseudo-content').removeAttribute('aria-busy');
+    byId('live-pseudo-message').textContent = message;
+  }
+  function invertY(event, options = {}) {
+    event?.preventDefault();
+    clearTimeout(yUpdateTimer);
+    byId('y-error').textContent = ''; byId('pseudo-results').hidden = true;
+    if (!model) return;
+    try {
+      const yInputs = Array.from(byId('y-grid-body').querySelectorAll('input'));
+      const y = yInputs.map((input, j) => [options.live ? M.scalar(input.value) : readCell(input, `y${j+1}`)]);
+      yInputs.forEach(input => input.removeAttribute('aria-invalid'));
+      savedY = Array.from(byId('y-grid-body').querySelectorAll('input'), input => input.value);
+      const d = M.inverseMap(model, y);
+      updateLiveDiagram(d);
+      byId('target-classification').textContent = d.attainable
+        ? 'This target is in the range of A. The pseudoinverse gives an exact solution Ax̂ = y, with the smallest input norm.'
+        : 'This target is outside the range of A. No exact solution exists; x̂ is the minimum-norm least-squares solution, and Ax̂ = yᵣ.';
+      putMatrix('y-output', d.y, 'Target y');
+      putMatrix('yr-output', d.yr, 'Column-space component y r');
+      putMatrix('yn-output', d.yn, 'Left-nullspace component y n');
+      putMatrix('inverse-coordinates', d.c, 'Coordinates c for y r in C and x hat in U', {empty: 'Empty coordinate vector (rank zero).'});
+      putMatrix('inverse-x', d.x, 'Minimum norm least squares input x hat');
+      putMatrix('recovered-y', d.Ax, 'A x hat equals the projected target y r');
+      byId('zero-inverse-note').hidden = model.rank !== 0;
+      byId('inverse-coordinate-formula').hidden = model.rank === 0;
+      putMatrix('left-null-check', d.normal, 'A transpose y n is zero');
+      putMatrix('discarded-y-check', d.discarded, 'A dagger y n is zero');
+      putMatrix('minnorm-check', d.NTx, 'N transpose x hat is zero', {empty: 'The nullspace is {0}; every input is orthogonal to it.'});
+      byId('y-dot-check').textContent = M.str(d.dot);
+      byId('least-squares-residual').innerHTML = `Minimum squared residual: <span class="math">‖Ax̂ − y‖<sup>2</sup> = ‖y<sub>n</sub>‖<sup>2</sup> = ${numberHTML(d.residualSquared)}</span>.`;
+      byId('pseudo-results').hidden = false;
+      byId('y-status').textContent = 'Target decomposition and inverse map computed exactly.';
+    } catch (error) {
+      if (!options.live) byId('y-error').textContent = error.message;
+      byId('y-status').textContent = options.live ? 'Finish entering valid target components to update the diagram.' : 'Update the target entries and compute again.';
+      pauseLiveDiagram('The live diagram is paused until every target component is a valid number or fraction.');
+    }
+  }
+  function useAx() {
+    if (!model) return;
+    byId('y-error').textContent = '';
+    try {
+      const x = Array.from(byId('vector-grid-body').querySelectorAll('input'), (input, j) => [readCell(input, `x${j+1}`)]);
+      const y = M.multiply(model.A, x);
+      Array.from(byId('y-grid-body').querySelectorAll('input')).forEach((input, i) => { input.value = M.str(y[i][0]); });
+      invertY();
+    } catch (error) { byId('y-error').textContent = `To use Ax, correct the x input above. ${error.message}`; }
+  }
+  byId('resize-matrix').addEventListener('click', resize);
+  byId('matrix-form').addEventListener('submit', compute);
+  byId('vector-form').addEventListener('submit', decompose);
+  byId('y-form').addEventListener('submit', invertY);
+  byId('use-ax').addEventListener('click', useAx);
+  for (const id of ['matrix-rows', 'matrix-cols']) byId(id).addEventListener('input', invalidate);
+  byId('load-example').addEventListener('click', () => {
+    gridRows = 3; gridCols = 4; savedVector = ['1','0','2','-1'];
+    savedY = ['1','0','0']; byId('y-grid-body').replaceChildren();
+    byId('matrix-rows').value = 3; byId('matrix-cols').value = 4;
+    byId('vector-grid-body').replaceChildren();
+    buildGrid(example); compute();
+  });
+  buildGrid(example); compute();
+})();
+</script>
+</body>
+</html>
