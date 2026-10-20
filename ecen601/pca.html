@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Learn principal component analysis by generating a 2-D Gaussian dataset, rotating a projection, and deriving the optimal subspace.">
+  <title>Principal component analysis</title>
+  <style>:root{color-scheme:light;--ink:#172c36;--body:#344e59;--muted:#51646d;--teal:#146c6a;--rust:#a25622;--blue:#146bb5;--line:#dce4e5;--green:var(--teal);--purple:var(--rust);--orange:var(--blue);--font:"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:#f4f6f5;color:var(--ink);font:24px/1.65 var(--font)}main{max-width:1400px;margin:32px auto;padding:48px 58px 42px;background:#fff}
+h1,h2,h3,p{margin:0}h1{margin:0 0 16px;font-size:clamp(38px,4vw,50px);line-height:1.17;font-weight:650;letter-spacing:-.035em}h2{font-size:34px;line-height:1.3;font-weight:600;letter-spacing:-.02em}h3{font-size:26px;line-height:1.4;font-weight:600}p{color:var(--body);margin:10px 0}
+.eyebrow{margin:0 0 12px;color:var(--teal);font-size:20px;font-weight:650;letter-spacing:.1em;text-transform:uppercase}.intro{max-width:1100px;color:var(--muted);font-size:24px;margin:0}a{color:var(--teal);text-underline-offset:4px}
+.contents{display:flex;flex-wrap:wrap;gap:12px 30px;margin-top:24px;font-size:20px}.contents a{text-decoration:none;border-bottom:2px solid transparent}.contents a:hover,.contents a.active{border-color:var(--teal)}
+button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #d18c39;outline-offset:3px}
+.lesson-section{margin-top:42px;padding-top:30px;border-top:2px solid var(--teal)}.section-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 24px;margin-bottom:24px}.section-heading>div{display:flex;align-items:baseline;gap:14px}.step{color:var(--teal);font-size:20px;font-weight:500;flex-shrink:0}.section-heading>p{color:var(--muted);font-size:20px;margin:0}
+.lab{display:grid;grid-template-columns:340px minmax(0,1fr);gap:26px;align-items:start}.controls{padding:24px;background:#f1f7f6;border:1px solid var(--line);border-radius:4px}.panel-top,.plot-header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}.panel-top h3{font-size:24px}.tag{color:var(--teal);font-size:20px;white-space:nowrap}
+.small,.fine,.input-note,.preset-label,.sample-info,.check,.legend,.plot-foot,.text-button,.under-note{font-size:20px}.small{margin:8px 0}.fine{color:var(--muted);line-height:1.65}
+.matrix-editor{display:flex;gap:18px;align-items:center;justify-content:center;margin:22px 0 10px}.matrix-symbol{font:32px "Cambria Math","Times New Roman",serif}.bracket{display:inline-grid;position:relative;padding:7px 11px;border-left:2px solid var(--ink);border-right:2px solid var(--ink)}.bracket::before,.bracket::after{position:absolute;content:"";left:0;right:0;height:5px;border-left:6px solid var(--ink);border-right:6px solid var(--ink)}.bracket::before{top:0}.bracket::after{bottom:0}
+.matrix-inputs{grid-template-columns:80px 80px;gap:10px}.matrix-inputs input,.matrix-inputs output{display:flex;align-items:center;justify-content:center;width:80px;height:57px;text-align:center;background:white;color:var(--ink);border:1px solid #9cafb5;border-radius:4px;font-size:28px;font-variant-numeric:tabular-nums}.matrix-inputs input{appearance:textfield}.matrix-inputs input::-webkit-inner-spin-button{appearance:none}.matrix-inputs output{background:#e2efec;color:var(--teal)}
+.input-note{text-align:center;color:var(--muted)}.preset-label{display:block;color:var(--muted);margin:22px 0 6px;font-weight:600}select{width:100%;padding:12px 8px;font-size:20px;color:var(--ink);border:1px solid #9cafb5;border-radius:4px;background:#fff}
+button{font:600 20px/1.4 var(--font);border:1px solid var(--teal);border-radius:4px;padding:11px 16px;color:var(--teal);background:#fff}button:hover{background:#e9f5f3}.primary{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:14px;color:#fff;background:var(--teal)}.primary:hover{background:#105654}.primary span{font-size:26px}
+.sample-info{border-top:1px solid var(--line);margin-top:22px;padding-top:18px;display:grid;gap:10px}.sample-info>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px}.sample-info span{color:var(--muted)}.sample-info strong{font-weight:500}.controls>.fine{margin-top:20px}.error{font-size:20px;color:#a12820}.error:empty{display:none}
+.plot-panel{min-width:0;padding:22px;border:1px solid var(--line);border-radius:4px}.plot-header{align-items:center;margin-bottom:12px}.plot-toggles{display:flex;flex-wrap:wrap;gap:8px 22px}.check{display:inline-flex;align-items:center;gap:9px;cursor:pointer;color:var(--ink);white-space:nowrap;padding:7px 0}.check input{accent-color:var(--teal);width:24px;height:24px;margin:0;flex-shrink:0}
+#scatter{display:block;width:100%;height:auto;aspect-ratio:1 / 1}.legend{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px 24px;color:var(--muted)}.legend>span{display:inline-flex;align-items:center;gap:8px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0}.sample,.pc1-dot{background:var(--teal)}.pc2-dot{background:var(--rust)}.discarded{background:#dce4e5}.line{display:inline-block;width:25px;height:3px}.pc1{background:var(--teal)}.pc2{background:var(--rust)}.chosen{background:var(--blue)}
+.plot-foot{display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);margin-top:20px;padding-top:14px;color:var(--muted)}.text-button{font-weight:500;padding:7px 11px;white-space:nowrap}
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;padding:26px 0;margin-top:26px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.stat{min-width:0}.stat p{font-size:20px;color:var(--muted);overflow-wrap:anywhere}.tiny-label{display:flex;align-items:center;gap:8px;color:var(--teal);font-size:20px;font-weight:600;line-height:1.5}
+.matrix-result{margin-top:18px}.inline-matrix{display:inline-grid;grid-template-columns:repeat(2,1fr);gap:4px 24px;vertical-align:middle;text-align:center;font:30px/1.5 "Cambria Math","Times New Roman",serif;font-variant-numeric:tabular-nums}.eigen-number{margin-top:12px;font:36px/1.5 "Cambria Math","Times New Roman",serif}.vector-result{font:25px/1.6 "Cambria Math","Times New Roman",serif;overflow-wrap:anywhere}.under-note{color:var(--muted);margin-top:16px}
+.projection-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:28px}.angle-panel,.variance-panel{min-width:0;padding:25px;background:#f8faf9;border:1px solid var(--line);border-radius:4px}.angle-title{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:16px 0}.angle-title>span{font:28px "Cambria Math","Times New Roman",serif}.angle-title>strong{font-size:34px;font-weight:500}
+input[type=range]{display:block;width:100%;height:9px;margin:22px 0;accent-color:var(--teal);cursor:pointer}.range-labels{display:flex;justify-content:space-between;font-size:20px;color:var(--muted)}.button-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}.projection-numbers{display:flex;flex-wrap:wrap;gap:24px 34px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}.projection-numbers>div{display:flex;flex-direction:column}.projection-numbers span,.projection-numbers small{font-size:20px;color:var(--muted)}.projection-numbers strong{font-size:42px;font-weight:500;font-variant-numeric:tabular-nums}
+.variance-panel svg{display:block;width:100%;height:auto}.score-label{margin-top:10px;padding-top:16px;border-top:1px solid var(--line);font-size:20px;color:var(--muted)}.variance-panel>.fine{text-align:center}.insight{display:flex;gap:18px;padding:20px 24px;margin-top:24px;background:#e2efec;border-left:4px solid var(--teal);color:#104f4e}.insight>span{font-size:32px}.insight strong{font-size:24px}.insight p{color:#104f4e;margin-bottom:0}
+.correction{padding:24px 28px;background:#fcf5e9;border-left:4px solid #b58132}.correction .tiny-label{color:#725017}.correction h3{font-size:28px;color:#725017;margin:12px 0}.objective-pair{display:flex;flex-wrap:wrap;justify-content:space-around;align-items:center;gap:20px;padding-top:22px;margin-top:22px;border-top:1px solid #e3d8bf}.objective-pair>div>span,.result-pair>div>span{font-size:20px;color:var(--muted)}
+.formula,.equation{font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;font-size:30px;line-height:1.8;color:var(--ink);overflow-wrap:anywhere}.formula{margin-top:10px}.equation{padding:14px 0}.formula sub,.equation sub,.equation sup{font-size:20px}.equiv{color:var(--teal);font-size:32px}u{text-decoration-thickness:1px;text-underline-offset:4px}.math-intro{margin:26px 0}mark{background:#e2efec;color:#104f4e;padding:3px 7px}
+.derivation-step{display:grid;grid-template-columns:34px minmax(0,1fr);gap:18px;border-top:1px solid var(--line);padding:28px 0}.derivation-num{font-size:20px;color:var(--muted);padding-top:4px}.derivation-step h3{font-size:28px;margin-bottom:12px}.worked-example{background:#f1f7f6;padding:26px 28px;margin-top:24px}.worked-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:26px;margin-top:14px}.worked-grid p{font-size:22px}.worked-example>.fine{margin-top:20px}
+.section-intro{max-width:1100px}.pipeline{display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:14px;padding:24px 0;margin:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.pipeline>div{display:flex;flex-direction:column;gap:8px;padding:14px}.pipeline>div>span{font-size:20px;color:var(--muted)}.pipeline strong{font:28px "Cambria Math","Times New Roman",serif}.pipeline-highlight{background:#e9f5f3}.pipeline-arrow{color:var(--muted);font-size:30px}.pipeline-arrow small{display:block;font-size:20px;text-align:center}
+.nd-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:30px;margin:28px 0;padding:26px;background:#f1f7f6}.nd-layout>div{min-width:0}.nd-layout h3{font-size:26px;margin:12px 0}.nd-layout p{font-size:22px}.nd-layout p.fine{font-size:20px}.slider-label{display:flex;justify-content:space-between;gap:15px;margin-top:25px;font-size:22px}.slider-label strong{color:var(--teal);font-size:26px}#spectrum{display:block;width:100%;height:auto}.spectrum-result{text-align:center;color:var(--teal)}
+.proof{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0}.proof summary{color:var(--teal);font-size:26px;font-weight:600;cursor:pointer}.proof-body{padding:18px 0 0}.result-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0;padding:22px;background:#e9f5f3}.result-pair .equation{font-size:28px}.footnotes{margin-top:26px}.footnotes p{font-size:20px;color:var(--muted)}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-top:24px;margin-top:30px;border-top:1px solid var(--line);font-size:20px;color:var(--muted)}svg text{font-family:var(--font);font-size:24px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(max-width:1150px){main{padding:38px 32px}.lab{grid-template-columns:310px minmax(0,1fr);gap:20px}.controls,.plot-panel{padding:20px}.projection-layout,.nd-layout{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr;gap:22px}.stat+.stat{border-top:1px solid var(--line);padding-top:22px}.worked-grid,.result-pair{grid-template-columns:1fr}}
+@media(max-width:850px){body{background:#fff}main{margin:0;padding:30px 24px}.lab{grid-template-columns:1fr}.section-heading>p{display:none}.controls{max-width:100%}.sample-info{grid-template-columns:1fr}.section-heading>div{align-items:start}.step{padding-top:6px}}
+@media(max-width:600px){main{padding:26px 18px}body{font-size:22px}h1{font-size:38px}h2{font-size:30px}.intro{font-size:22px}.contents{gap:10px 18px}.plot-panel{padding:18px 10px}.controls,.angle-panel,.variance-panel,.nd-layout,.worked-example,.correction{padding:22px 18px}.formula,.equation{font-size:27px}.formula sub,.equation sub,.equation sup{font-size:19px}.objective-pair{flex-direction:column;align-items:start}.pipeline{flex-direction:column;align-items:stretch;text-align:center}.pipeline-arrow{transform:rotate(90deg)}.pipeline-arrow small{display:none}.derivation-step{grid-template-columns:26px minmax(0,1fr);gap:10px}.derivation-step h3{font-size:26px}.eyebrow{font-size:18px}}
+@media print{@page{size:A4;margin:15mm}body{background:white;font-size:12pt}main{padding:0;margin:0;max-width:none}h1{font-size:28pt}h2{font-size:20pt}.contents,button,input[type=range],.plot-toggles{display:none}.lesson-section{margin-top:24px;padding-top:18px}.lab,.projection-layout,.nd-layout{grid-template-columns:1fr}.controls,.plot-panel,.stat,.derivation-step,.worked-example,.insight{break-inside:avoid}.formula,.equation{font-size:17pt}.intro,p,.fine,.tiny-label{font-size:12pt}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.scatter-wrap{position:relative}
+.point-tooltip{position:absolute;z-index:2;min-width:210px;padding:12px 16px;border:2px solid var(--teal);border-radius:4px;background:#fff;color:var(--ink);box-shadow:0 4px 14px #172c3626;font:22px/1.5 var(--font);font-variant-numeric:tabular-nums;white-space:pre-line;pointer-events:none}
+.data-point{cursor:crosshair;outline:none}
+.data-point:hover,.data-point:focus{r:6;fill-opacity:1;stroke:var(--ink);stroke-width:2}
+@media print{.point-tooltip{display:none}}
+.fraction{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;font-size:.85em;margin:0 .16em}
+.fraction>span:first-child{border-bottom:1px solid currentColor;padding:0 4px 3px}
+.fraction>span:last-child{padding-top:3px}
+.projection-definitions{margin-bottom:28px}
+.objective-equivalence{margin:28px 0}
+.objective-equivalence>.equation,.objective-pair .formula{font-size:28px}
+</style>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <p class="eyebrow">ECEN 601 · Linear algebra</p>
+    <h1>Principal component analysis</h1>
+    <p class="intro">Find the directions that retain the most variance. Start with a two-dimensional Gaussian dataset, explore its principal components, and derive the optimal projection from n dimensions to k dimensions.</p>
+    <nav class="contents" aria-label="Lesson sections">
+      <a class="active" href="#explore">1. The dataset</a>
+      <a href="#projection">2. Projection</a>
+      <a href="#derive">3. Optimization</a>
+      <a href="#dimensions">4. Higher dimensions</a>
+    </nav>
+  </header>
+
+  <section id="explore" class="lesson-section">
+    <div class="section-heading"><div><span class="step">01</span><h2>A two-dimensional dataset</h2></div><p>A covariance matrix gives the cloud its shape.<br>Change it, then see what happens.</p></div>
+    <div class="lab">
+      <div class="controls">
+        <div class="panel-top"><h3>Your covariance matrix</h3><span class="tag">2 × 2</span></div>
+        <p class="small">Draw xᵢ ∼ 𝒩(0, Σ), independently.</p>
+        <form id="cov-form">
+          <div class="matrix-editor"><span class="matrix-symbol">Σ =</span><div class="bracket matrix-inputs"><label><span class="sr-only">Variance of x1</span><input id="s11" type="number" step="any" value="5" required></label><label><span class="sr-only">Covariance between x1 and x2</span><input id="s12" type="number" step="any" value="1" required></label><output id="s21" aria-label="Mirrored covariance">1</output><label><span class="sr-only">Variance of x2</span><input id="s22" type="number" step="any" value="5" required></label></div></div>
+          <p class="input-note">Symmetric by design: Σ₂₁ = Σ₁₂.</p>
+          <label class="preset-label" for="preset">TRY A SHAPE</label>
+          <select id="preset"><option value="default">Default · gentle diagonal</option><option value="strong">Strong positive correlation</option><option value="negative">Negative correlation</option><option value="isotropic">Equal in every direction</option><option value="rankone">A line · rank one</option><option value="custom" disabled>Custom covariance</option></select>
+          <button type="submit" class="primary">Generate 100 points <span>↗</span></button>
+          <p id="cov-error" role="alert" class="error"></p>
+        </form>
+        <div class="sample-info"><div><span>Population mean</span><strong>[0, 0]ᵀ</strong></div><div><span>Sample size</span><strong>N = 100</strong></div><div><span>Dataset seed</span><strong id="seed-info">601</strong></div></div>
+        <p class="fine">A finite sample will usually have a nonzero mean and a covariance close to, but different from, Σ.</p>
+      </div>
+      <div class="plot-panel">
+        <div class="plot-header"><h3>The dataset</h3><div class="plot-toggles"><label class="check"><input id="show-projections" type="checkbox"> Show projections</label><label class="check"><input id="show-pca-axes" type="checkbox"> Show PCA axes</label></div></div>
+        <div class="scatter-wrap"><svg id="scatter" viewBox="0 0 650 650" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="scatter-title scatter-description"><title id="scatter-title">Scatter plot of 100 Gaussian samples</title><desc id="scatter-description">Points with coordinate markers at the plot boundary. Hover over a point to read its values.</desc></svg><div id="point-tooltip" class="point-tooltip" role="tooltip" hidden></div></div>
+        <div class="legend"><span><i class="dot sample"></i> Samples</span><span id="pc1-legend" hidden><i class="line pc1"></i> PC1</span><span id="pc2-legend" hidden><i class="line pc2"></i> PC2</span><span id="direction-legend" hidden><i class="line chosen"></i> Your direction a</span></div>
+        <div class="plot-foot"><span>Hover over a point to see its x₁ and x₂ values. The plotting area is square, with identical coordinate ranges and scales. PCA directions pass through the sample mean.</span><button class="text-button" id="download">Download dataset ↓</button></div>
+      </div>
+    </div>
+    <div class="stats-grid" aria-live="polite">
+      <div class="stat"><span class="tiny-label">EMPIRICAL COVARIANCE R</span><div id="emp-cov" class="matrix-result"></div><p>R = (1 / 99) ∑ᵢ (xᵢ − x̄)(xᵢ − x̄)ᵀ</p></div>
+      <div class="stat"><span class="tiny-label"><i class="dot pc1-dot"></i> FIRST PRINCIPAL COMPONENT</span><div class="eigen-number">λ₁ = <span id="lambda1"></span></div><div id="v1" class="vector-result"></div><p><strong id="explained"></strong> of total sample variance</p></div>
+      <div class="stat"><span class="tiny-label"><i class="dot pc2-dot"></i> SECOND PRINCIPAL COMPONENT</span><div class="eigen-number">λ₂ = <span id="lambda2"></span></div><div id="v2" class="vector-result"></div><p>Sample mean x̄ = <span id="sample-mean"></span></p></div>
+    </div>
+    <p class="under-note" id="population-note"></p>
+  </section>
+
+  <section id="projection" class="lesson-section">
+    <div class="section-heading"><div><span class="step">02</span><h2>Projecting onto a line</h2></div><p>Rotate a unit vector. Watch the spread<br>of the projected data change.</p></div>
+    <div class="projection-layout">
+      <div class="angle-panel"><span class="tiny-label">YOUR PROJECTION DIRECTION</span><div class="angle-title"><span>a(θ) = [cos θ, sin θ]ᵀ</span><strong id="angle-value">45°</strong></div><label class="sr-only" for="angle">Projection angle in degrees</label><input type="range" id="angle" min="0" max="180" step="0.1" value="45"><div class="range-labels"><span>0°</span><span>90°</span><span>180°</span></div><div class="button-row"><button id="use-pc1" class="secondary">Align with PC1 ↗</button><button id="use-pc2" class="secondary">Align with PC2 ↘</button></div><div class="projection-numbers"><div><span>Retained variance</span><strong id="retained"></strong><small id="retained-percent"></small></div><div><span>Residual variance</span><strong id="residual"></strong><small>total − retained</small></div></div><p class="fine">Scores: zᵢ = aᵀ(xᵢ − x̄). Reconstruction: x̂ᵢ = x̄ + azᵢ. Residual variance uses the same 1/(N−1) normalization as R.</p></div>
+      <div class="variance-panel"><div class="panel-top"><h3>Variance as you rotate</h3><span class="tag">aᵀRa</span></div><svg id="variance-plot" viewBox="0 0 560 250" role="img" aria-label="Projected sample variance versus angle"></svg><div class="score-label">THE PROJECTED DATA · zᵢ</div><svg id="scores" viewBox="0 0 560 80" role="img" aria-label="One-dimensional centered projection of the 100 samples"></svg><p class="fine">A wider spread retains more variance. Opposite directions describe the same line.</p></div>
+    </div>
+    <div class="insight"><span>↗</span><div><strong>The best view is the direction of greatest spread.</strong><p>PC1 keeps the most variance in one coordinate. Equivalently, it loses the least information measured by squared reconstruction error.</p></div></div>
+  </section>
+
+  <section id="derive" class="lesson-section math-section">
+    <div class="section-heading"><div><span class="step">03</span><h2>The PCA optimization problem</h2></div><p>Maximize the variance retained<br>by the projection.</p></div>
+    <p class="math-intro">First subtract the sample mean. In this derivation, <u>x</u>ᵢ denotes a <strong>centered</strong> sample, so ∑ᵢ <u>x</u>ᵢ = 0. Define the empirical covariance matrix</p>
+    <div class="equation">R = <span class="fraction"><span>1</span><span>N − 1</span></span> ∑<sub>i=1</sub><sup>N</sup> <u>x</u>ᵢ<u>x</u>ᵢᴴ.</div>
+    <p>For our dataset, N = 100. Here ᴴ means conjugate transpose; for real data it is simply ᵀ. All variances below are computed from the samples using the same 1/(N−1) normalization.</p>
+
+    <div class="worked-example projection-definitions">
+      <h3>The lower-dimensional projection and its reconstruction</h3>
+      <p>Choose a unit vector <u>a</u>, with <u>a</u>ᴴ<u>a</u> = 1. Each data vector is represented by a single coordinate:</p>
+      <div class="equation"><mark>zᵢ = <u>a</u>ᴴ<u>x</u>ᵢ.</mark></div>
+      <p><strong>zᵢ is the lower-dimensional projection</strong>: one scalar for each original vector. The corresponding reconstruction in the original space is</p>
+      <div class="equation"><mark><u>x̂</u>ᵢ = <u>a</u>zᵢ = <u>a</u><u>a</u>ᴴ<u>x</u>ᵢ.</mark></div>
+      <p>The reconstruction lies on the line spanned by <u>a</u>. The residual <u>x</u>ᵢ − <u>x̂</u>ᵢ is perpendicular to that line. For an observation before centering, add the sample mean back to its reconstruction.</p>
+    </div>
+
+    <div class="correction objective-equivalence">
+      <span class="tiny-label">TWO EQUIVALENT OBJECTIVES</span>
+      <h3>Keep the most variance, or lose the least.</h3>
+      <p>The projected coordinates are centered because ∑ᵢ zᵢ = 0. Their sample variance is <u>a</u>ᴴR<u>a</u>. Orthogonal projection splits the total sample variance into retained and residual parts:</p>
+      <div class="equation"><span class="fraction"><span>1</span><span>N − 1</span></span> ∑<sub>i=1</sub><sup>N</sup> ‖<u>x</u>ᵢ − <u>x̂</u>ᵢ‖₂² = tr(R) − <u>a</u>ᴴR<u>a</u>.</div>
+      <p>Since tr(R) is fixed for the dataset, these two problems have the same solution:</p>
+      <div class="objective-pair"><div><span>MAXIMIZE RETAINED VARIANCE</span><div class="formula">max<sub><u>a</u>ᴴ<u>a</u>=1</sub> <u>a</u>ᴴR<u>a</u></div></div><span class="equiv">⇔</span><div><span>MINIMIZE RECONSTRUCTION ERROR</span><div class="formula">min<sub><u>a</u>ᴴ<u>a</u>=1</sub> <span class="fraction"><span>1</span><span>N − 1</span></span> ∑ᵢ ‖<u>x</u>ᵢ − <u>a</u><u>a</u>ᴴ<u>x</u>ᵢ‖₂²</div></div></div>
+      <p>We will solve the <strong>maximization problem</strong> directly.</p>
+    </div>
+
+    <div class="derivation-step"><span class="derivation-num">1</span><div><h3>Maximize the projected sample variance.</h3>
+      <p>Using zᵢ = <u>a</u>ᴴ<u>x</u>ᵢ, the objective becomes</p>
+      <div class="equation">var(z) = <span class="fraction"><span>1</span><span>N − 1</span></span> ∑<sub>i=1</sub><sup>N</sup> |zᵢ|² = <u>a</u>ᴴR<u>a</u>.</div>
+      <div class="equation"><mark>max<sub><u>a</u>ᴴ<u>a</u>=1</sub> <u>a</u>ᴴR<u>a</u>.</mark></div>
+      <p>The unit-length constraint is essential: otherwise, rescaling <u>a</u> could increase the objective without bound.</p>
+    </div></div>
+    <div class="derivation-step"><span class="derivation-num">2</span><div><h3>Apply a Lagrange multiplier.</h3>
+      <div class="equation">ℒ(<u>a</u>, λ) = <u>a</u>ᴴR<u>a</u> − λ(<u>a</u>ᴴ<u>a</u> − 1).</div>
+      <p>For real vectors, the stationarity condition is 2R<u>a</u> − 2λ<u>a</u> = 0. For complex vectors, differentiating with respect to <u>a</u>* gives the same eigenvector equation:</p>
+      <div class="equation"><mark>R<u>a</u> = λ<u>a</u>.</mark></div>
+      <p>Thus a stationary direction is an eigenvector of R. Multiplying by <u>a</u>ᴴ shows that the projected sample variance in that direction equals λ.</p>
+    </div></div>
+    <div class="derivation-step"><span class="derivation-num">3</span><div><h3>Select the eigenvector with the largest eigenvalue.</h3>
+      <p>R is Hermitian positive semidefinite, so it has an orthonormal eigenbasis with λ₁ ≥ λ₂ ≥ ⋯ ≥ λₙ ≥ 0. Expand any unit vector as <u>a</u> = ∑ⱼ cⱼ<u>v</u>ⱼ, with ∑ⱼ|cⱼ|² = 1. Then</p>
+      <div class="equation"><u>a</u>ᴴR<u>a</u> = ∑ⱼ λⱼ|cⱼ|² ≤ λ₁ ∑ⱼ|cⱼ|² = <mark>λ₁</mark>.</div>
+      <p>The upper bound is attained by <strong><u>a</u> = <u>v</u>₁</strong>. Therefore the first principal component is an eigenvector of the empirical covariance R corresponding to its largest eigenvalue, and the maximum retained variance is λ₁.</p>
+    </div></div>
+    <div class="worked-example"><span class="tiny-label">THE DEFAULT SAMPLING COVARIANCE</span><div class="worked-grid"><div><div class="equation">Σ = <span class="inline-matrix bracket"><span>5</span><span>1</span><span>1</span><span>5</span></span></div><p>Total variance of the sampling distribution = 10.</p></div><div><div class="equation">λ₁(Σ) = 6, &nbsp; <u>v</u>₁(Σ) = [1, 1]ᵀ/√2</div><p>The leading direction of Σ is 45°.</p><div class="equation">λ₂(Σ) = 4, &nbsp; <u>v</u>₂(Σ) = [−1, 1]ᵀ/√2</div></div></div><p class="fine">Σ specifies how the points are generated. PCA of the actual dataset uses R and its eigenpairs, displayed in the laboratory above; these need not equal the eigenpairs of Σ.</p></div>
+  </section>
+
+  <section id="dimensions" class="lesson-section">
+    <div class="section-heading"><div><span class="step">04</span><h2>Reducing n dimensions to k dimensions</h2></div><p>Keep k directions.<br>Make every one count.</p></div>
+    <p class="section-intro">For centered samples <u>x</u>ᵢ ∈ ℂⁿ (or ℝⁿ), use the empirical covariance R = (1/(N−1)) ∑ᵢ <u>x</u>ᵢ<u>x</u>ᵢᴴ. Choose k orthonormal directions as columns of U, with UᴴU = Iₖ. The projected vector <u>z</u>ᵢ = Uᴴ<u>x</u>ᵢ has k coordinates, and the reconstruction is <u>x̂</u>ᵢ = U<u>z</u>ᵢ = UUᴴ<u>x</u>ᵢ.</p>
+    <div class="pipeline"><div><span>ORIGINAL</span><strong><u>x</u> ∈ ℝⁿ</strong></div><span class="pipeline-arrow">→<small>Uₖᴴ</small></span><div class="pipeline-highlight"><span>COMPRESSED</span><strong><u>z</u> = Uₖᴴ<u>x</u> ∈ ℝᵏ</strong></div><span class="pipeline-arrow">→<small>Uₖ</small></span><div><span>RECONSTRUCTED</span><strong><u>x̂</u> = UₖUₖᴴ<u>x</u></strong></div></div>
+    <div class="nd-layout"><div><span class="tiny-label">TRY A HIGHER-DIMENSIONAL SPECTRUM</span><h3>Choosing the number of components</h3><p>These illustrative eigenvalues decay with component number. Choose n and k to see the tradeoff.</p><label class="slider-label" for="n-range">Original dimensions, n <strong id="n-value">8</strong></label><input id="n-range" type="range" min="2" max="12" value="8"><label class="slider-label" for="k-range">Retained dimensions, k <strong id="k-value">2</strong></label><input id="k-range" type="range" min="1" max="8" value="2"><p class="fine">Illustrative spectrum: λⱼ = 8 × 0.6ʲ⁻¹. This example is separate from the 2-D dataset above.</p></div><div><div class="panel-top"><h3>Keep the leading components</h3><span class="tag" id="nd-percent"></span></div><svg id="spectrum" viewBox="0 0 560 260" role="img" aria-label="Illustrative n-dimensional eigenvalue spectrum with retained components highlighted"></svg><div class="legend"><span><i class="dot pc1-dot"></i> Retained</span><span><i class="dot discarded"></i> Discarded</span></div><p id="nd-error" class="spectrum-result" aria-live="polite"></p></div></div>
+    <details class="proof" open><summary>Why do the top k eigenvectors maximize retained variance?</summary><div class="proof-body">
+      <p>The total sample variance of the k-dimensional projected data is</p>
+      <div class="equation"><span class="fraction"><span>1</span><span>N − 1</span></span> ∑<sub>i=1</sub><sup>N</sup> ‖Uᴴ<u>x</u>ᵢ‖₂² = tr(UᴴRU).</div>
+      <p>So the higher-dimensional PCA problem is</p>
+      <div class="equation"><mark>max<sub>UᴴU=Iₖ</sub> tr(UᴴRU).</mark></div>
+      <p>Write R = VΛVᴴ and set B = VᴴU. Then BᴴB = Iₖ. Define wⱼ as the sum of squared magnitudes in row j of B. These weights satisfy 0 ≤ wⱼ ≤ 1 and ∑ⱼwⱼ = k, so</p>
+      <div class="equation">tr(UᴴRU) = ∑ⱼ λⱼwⱼ ≤ ∑<sub>j=1</sub><sup>k</sup> λⱼ.</div>
+      <p>Shifting weight from a smaller eigenvalue to an unfilled larger one cannot decrease the objective. Its largest value is attained when the first k weights are 1. Therefore an optimal choice is <strong>Uₖ = [<u>v</u>₁, …, <u>v</u>ₖ]</strong>, the eigenvectors of R corresponding to its k largest eigenvalues. The optimal subspace retains total variance λ₁ + ⋯ + λₖ.</p>
+      <div class="result-pair"><div><span>EXPLAINED VARIANCE RATIO</span><div class="equation">(λ₁ + ⋯ + λₖ) / tr(R)</div></div><div><span>RESIDUAL SAMPLE VARIANCE</span><div class="equation">tr(R) − ∑<sub>j=1</sub><sup>k</sup> λⱼ = λₖ₊₁ + ⋯ + λₙ</div></div></div>
+      <p>The residual sample variance is (1/(N−1)) ∑ᵢ ‖<u>x</u>ᵢ − UₖUₖᴴ<u>x</u>ᵢ‖₂². If reconstruction error is averaged with 1/N instead, multiply this value by (N−1)/N; the optimal subspace is unchanged.</p>
+      <p>For the original observations, subtract the sample mean <u>x̄</u> before projecting and add it back after reconstructing. PCA here uses the empirical covariance R, so features keep their original scale; standardizing features changes the problem.</p>
+    </div></details>
+    <div class="footnotes"><p><strong>A note about uniqueness.</strong> Eigenvector signs (or complex phases) can change without changing the subspace. Repeated eigenvalues allow different orthonormal bases; a tie at the k-th eigenvalue can make the optimal subspace nonunique. With zero total variance, every direction is optimal and the explained variance ratio is undefined.</p></div>
+  </section>
+  <footer><span>Self-contained · works offline · 100 samples per dataset · displayed values are rounded</span><a href="#explore">Back to the dataset ↑</a></footer>
+</main>
+<script>'use strict';
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg';
+const palette = {green:'#146c6a', purple:'#a25622', orange:'#146bb5', grid:'#e8edef', muted:'#51646d', ink:'#172c36'};
+function svgEl(tag, attrs={}, text){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
+function add(root,tag,attrs,text){const e=svgEl(tag,attrs,text);root.append(e);return e;}
+function fmt(x,d=3){return (Math.abs(x)<0.5*10**(-d)?0:x).toFixed(d);}
+function rng(seed){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+function eigen(a,b,d){const gap=Math.hypot(a-d,2*b), angle=gap===0?0:Math.atan2(2*b,a-d)/2;return {values:[Math.max(0,(a+d+gap)/2),Math.max(0,(a+d-gap)/2)],vectors:[[Math.cos(angle),Math.sin(angle)],[-Math.sin(angle),Math.cos(angle)]]};}
+function gaussianDataset(cov,seed){const r=rng(seed),eig=eigen(...cov),points=[];for(let i=0;i<100;i++){const u=Math.max(r(),Number.EPSILON),v=r(),s=Math.sqrt(-2*Math.log(u)),z=[s*Math.cos(2*Math.PI*v),s*Math.sin(2*Math.PI*v)];points.push([0,1].map(j=>eig.vectors[0][j]*Math.sqrt(eig.values[0])*z[0]+eig.vectors[1][j]*Math.sqrt(eig.values[1])*z[1]));}return points;}
+function sampleStats(points){const mean=[0,1].map(j=>points.reduce((s,p)=>s+p[j],0)/points.length);let a=0,b=0,d=0;for(const p of points){const x=p[0]-mean[0],y=p[1]-mean[1];a+=x*x;b+=x*y;d+=y*y;}const cov=[a/99,b/99,d/99];return {mean,cov,eig:eigen(...cov)};}
+let state={seed:601,pop:[5,1,5],points:[],mean:[0,0],cov:[0,0,0],eig:null,theta:45};
+function matrixHTML(a,b,d){return `<span class="inline-matrix bracket"><span>${fmt(a)}</span><span>${fmt(b)}</span><span>${fmt(b)}</span><span>${fmt(d)}</span></span>`;}
+function generate(){const cov=[$('s11').valueAsNumber,$('s12').valueAsNumber,$('s22').valueAsNumber];const [a,b,d]=cov;const tol=1e-12*Math.max(Number.MIN_VALUE,a*d,b*b);if(!cov.every(Number.isFinite)||a<0||d<0||a*d-b*b < -tol||Math.max(...cov.map(Math.abs))>1e6){$('cov-error').textContent='Use a positive semidefinite matrix: variances ≥ 0 and covariance² ≤ variance₁ × variance₂. Entries must be finite and at most 1,000,000 in magnitude.';return false;}$('cov-error').textContent='';state.pop=cov;state.points=gaussianDataset(cov,state.seed);Object.assign(state,sampleStats(state.points));$('seed-info').textContent=state.seed;$('emp-cov').innerHTML=matrixHTML(...state.cov);$('lambda1').textContent=fmt(state.eig.values[0]);$('lambda2').textContent=fmt(state.eig.values[1]);state.eig.vectors.forEach((v,i)=>$('v'+(i+1)).textContent=`v${i+1===1?'₁':'₂'} = [${fmt(v[0])}, ${fmt(v[1])}]ᵀ`);const total=state.cov[0]+state.cov[2];$('explained').textContent=total>0?(100*state.eig.values[0]/total).toFixed(1)+'%':'Undefined (zero variance)';$('sample-mean').textContent=`[${fmt(state.mean[0])}, ${fmt(state.mean[1])}]ᵀ`;const pe=eigen(...cov);$('population-note').textContent=`Population eigenvalues of your Σ: ${fmt(pe.values[0])} and ${fmt(pe.values[1])}. ${Math.abs(pe.values[0]-pe.values[1])<1e-10?'Equal population eigenvalues: the population has no preferred direction; finite samples may still show unequal eigenvalues.':'Empirical principal components above are calculated from R.'}`;updateProjection();return true;}
+function boundaryTicks(limit){
+  const raw=2*limit/4,order=10**Math.floor(Math.log10(raw)),fraction=raw/order;
+  const step=(fraction<=1?1:fraction<=2?2:fraction<=5?5:10)*order;
+  return Array.from({length:2*Math.floor(limit/step)+1},(_,i)=>(i-Math.floor(limit/step))*step);
+}
+function showPointTooltip(event,point,index,dot){
+  const tip=$('point-tooltip'),host=dot.closest('.scatter-wrap'),box=host.getBoundingClientRect(),target=dot.getBoundingClientRect();
+  tip.textContent=`Point ${index+1}\nx₁ = ${fmt(point[0],4)}\nx₂ = ${fmt(point[1],4)}`;
+  tip.hidden=false;
+  const x=event.type==='focus'?target.right-box.left:event.clientX-box.left;
+  const y=event.type==='focus'?target.top-box.top:event.clientY-box.top;
+  const left=Math.max(4,Math.min(x+16,host.clientWidth-tip.offsetWidth-4));
+  const top=Math.max(4,Math.min(y-tip.offsetHeight-12,host.clientHeight-tip.offsetHeight-4));
+  tip.style.left=left+'px';tip.style.top=top+'px';
+}
+function hidePointTooltip(){ $('point-tooltip').hidden=true; }
+function drawScatter(){
+  hidePointTooltip();
+  const root=$('scatter'), showPCA=$('show-pca-axes').checked, showProjections=$('show-projections').checked;
+  root.replaceChildren(svgEl('title',{id:'scatter-title'},'100 Gaussian samples'),svgEl('desc',{id:'scatter-description'},'Coordinate ticks and labels appear at the plot boundary. Hover over or focus a point to read its original x1 and x2 values. '+(showPCA?'PCA directions pass through the sample mean and extend two sample standard deviations on each side. ':'')+(showProjections?'Blue lines show the chosen projection.':'')));
+  $('pc1-legend').hidden=!showPCA; $('pc2-legend').hidden=!showPCA; $('direction-legend').hidden=!showProjections;
+  const w=650,h=650,pad=78,extent=Math.max(1,...state.points.flat().map(Math.abs))*1.2;
+  const ex=extent,ey=extent;
+  const X=x=>pad+(x+ex)/(2*ex)*(w-2*pad),Y=y=>h-pad-(y+ey)/(2*ey)*(h-2*pad);
+  const frame=add(root,'g',{'class':'boundary-axes','aria-hidden':'true'});
+  add(frame,'rect',{x:pad,y:pad,width:w-2*pad,height:h-2*pad,fill:'none',stroke:'#9cafb5','stroke-width':1.5});
+  for(const v of boundaryTicks(ex)){
+    for(const y of [pad,h-pad])add(frame,'line',{x1:X(v),x2:X(v),y1:y,y2:y+(y===pad?7:-7),stroke:palette.muted,'stroke-width':1.5});
+    add(frame,'text',{x:X(v),y:h-pad+32,'text-anchor':'middle',fill:palette.muted},fmt(v,1));
+  }
+  for(const v of boundaryTicks(ey)){
+    for(const x of [pad,w-pad])add(frame,'line',{x1:x,x2:x+(x===pad?7:-7),y1:Y(v),y2:Y(v),stroke:palette.muted,'stroke-width':1.5});
+    add(frame,'text',{x:pad-12,y:Y(v)+8,'text-anchor':'end',fill:palette.muted},fmt(v,1));
+  }
+  add(frame,'text',{x:w/2,y:h-8,'text-anchor':'middle',fill:palette.ink,'font-weight':600},'x₁');
+  add(frame,'text',{x:20,y:h/2,transform:`rotate(-90 20 ${h/2})`,'text-anchor':'middle',fill:palette.ink,'font-weight':600},'x₂');
+  const defs=add(root,'defs');add(add(defs,'clipPath',{id:'plot-clip'}),'rect',{x:pad,y:pad,width:w-2*pad,height:h-2*pad});
+  const g=add(root,'g',{'clip-path':'url(#plot-clip)'}),rad=state.theta*Math.PI/180,dir=[Math.cos(rad),Math.sin(rad)],m=state.mean;
+  if(showProjections){
+    for(const p of state.points){const z=(p[0]-m[0])*dir[0]+(p[1]-m[1])*dir[1];
+      add(g,'line',{x1:X(p[0]),y1:Y(p[1]),x2:X(m[0]+z*dir[0]),y2:Y(m[1]+z*dir[1]),stroke:palette.orange,'stroke-opacity':.35,'stroke-width':1.3});
+      add(g,'circle',{cx:X(m[0]+z*dir[0]),cy:Y(m[1]+z*dir[1]),r:2.8,fill:palette.orange,'fill-opacity':.75});
+    }
+    add(g,'line',{x1:X(m[0]-3*ex*dir[0]),y1:Y(m[1]-3*ex*dir[1]),x2:X(m[0]+3*ex*dir[0]),y2:Y(m[1]+3*ex*dir[1]),stroke:palette.orange,'stroke-width':2,'stroke-dasharray':'7 5'});
+  }
+  if(showPCA)state.eig.vectors.forEach((v,i)=>{
+    const len=2*Math.sqrt(state.eig.values[i]),color=i?palette.purple:palette.green;
+    add(g,'line',{x1:X(m[0]-len*v[0]),y1:Y(m[1]-len*v[1]),x2:X(m[0]+len*v[0]),y2:Y(m[1]+len*v[1]),stroke:color,'stroke-width':3.5,'stroke-dasharray':i?'7 5':''});
+    add(g,'text',{x:X(m[0]+len*v[0])+9,y:Y(m[1]+len*v[1])-10,fill:color,'font-size':24,'font-weight':650},'PC'+(i+1));
+  });
+  state.points.forEach((p,i)=>{
+    const dot=add(g,'circle',{cx:X(p[0]),cy:Y(p[1]),r:4.5,fill:palette.green,'fill-opacity':.7,stroke:'#fff','stroke-width':.7,'class':'data-point',tabindex:0,'aria-label':`Point ${i+1}: x1 ${fmt(p[0],4)}, x2 ${fmt(p[1],4)}`,'aria-describedby':'point-tooltip','data-point-index':i});
+    for(const type of ['pointerenter','pointermove','pointerdown','focus'])dot.addEventListener(type,event=>showPointTooltip(event,p,i,dot));
+    for(const type of ['pointerleave','blur'])dot.addEventListener(type,hidePointTooltip);
+  });
+  add(g,'circle',{cx:X(m[0]),cy:Y(m[1]),r:5,fill:palette.ink,stroke:'#fff','stroke-width':1.5,'pointer-events':'none'});
+}
+function variance(theta){const t=theta*Math.PI/180,c=Math.cos(t),s=Math.sin(t);return Math.max(0,state.cov[0]*c*c+2*state.cov[1]*c*s+state.cov[2]*s*s);}
+function drawVariance(){const root=$('variance-plot');root.replaceChildren();const w=560,h=250,pad=62,max=Math.max(state.eig.values[0]*1.16,1),X=t=>pad+t/180*(w-2*pad),Y=v=>h-pad-v/max*(h-2*pad);for(let i=0;i<=4;i++){const v=max*i/4;add(root,'line',{x1:pad,y1:Y(v),x2:w-pad,y2:Y(v),stroke:palette.grid});add(root,'text',{x:pad-8,y:Y(v)+3,'text-anchor':'end','font-size':10,fill:palette.muted},fmt(v,1));}for(const t of [0,45,90,135,180])add(root,'text',{x:X(t),y:h-19,'text-anchor':'middle','font-size':10,fill:palette.muted},t+'°');const coords=Array.from({length:181},(_,t)=>`${X(t)},${Y(variance(t))}`);add(root,'path',{d:`M${X(0)},${Y(0)} L${coords.join(' L')} L${X(180)},${Y(0)} Z`,fill:'#e9f5f3'});add(root,'polyline',{points:coords.join(' '),fill:'none',stroke:palette.green,'stroke-width':2});const opt=(Math.atan2(state.eig.vectors[0][1],state.eig.vectors[0][0])*180/Math.PI+180)%180;add(root,'line',{x1:X(opt),x2:X(opt),y1:Y(0),y2:Y(state.eig.values[0]),stroke:palette.green,'stroke-dasharray':'3 4','stroke-opacity':.4});add(root,'text',{x:Math.min(w-pad-25,Math.max(pad+25,X(opt))),y:Y(state.eig.values[0])-9,'text-anchor':'middle','font-size':10,fill:palette.green},'PC1 · maximum');const val=variance(state.theta);add(root,'line',{x1:X(state.theta),x2:X(state.theta),y1:Y(0),y2:Y(val),stroke:palette.orange,'stroke-dasharray':'3 4'});add(root,'circle',{cx:X(state.theta),cy:Y(val),r:5,fill:palette.orange,stroke:'white','stroke-width':2});}
+function drawScores(){const root=$('scores');root.replaceChildren();const t=state.theta*Math.PI/180,vals=state.points.map(p=>(p[0]-state.mean[0])*Math.cos(t)+(p[1]-state.mean[1])*Math.sin(t));const ext=Math.max(1,...state.points.map(p=>Math.hypot(p[0]-state.mean[0],p[1]-state.mean[1])))*1.1,X=z=>30+(z+ext)/(2*ext)*500;add(root,'line',{x1:30,x2:530,y1:40,y2:40,stroke:'#d5ddce'});for(let i=-1;i<=1;i++){add(root,'line',{x1:X(i*ext),x2:X(i*ext),y1:36,y2:45,stroke:palette.muted});add(root,'text',{x:X(i*ext),y:66,'text-anchor':'middle','font-size':9,fill:palette.muted},fmt(i*ext,1));}vals.forEach((z,i)=>add(root,'circle',{cx:X(z),cy:25+(i%5)*6,r:2.7,fill:palette.orange,'fill-opacity':.7}));}
+function updateProjection(){const v=variance(state.theta),total=state.cov[0]+state.cov[2];$('angle').value=state.theta;$('angle-value').textContent=state.theta.toFixed(1)+'°';$('retained').textContent=fmt(v);$('residual').textContent=fmt(Math.max(0,total-v));$('retained-percent').textContent=total>0?(100*v/total).toFixed(1)+'% of total':'Ratio undefined';drawScatter();drawVariance();drawScores();}
+function drawSpectrum(){const n=+$('n-range').value;$('k-range').max=n;if(+$('k-range').value>n)$('k-range').value=n;const k=+$('k-range').value;$('n-value').textContent=n;$('k-value').textContent=k;const vals=Array.from({length:n},(_,i)=>8*.6**i),total=vals.reduce((a,b)=>a+b,0),kept=vals.slice(0,k).reduce((a,b)=>a+b,0);$('nd-percent').textContent=(100*kept/total).toFixed(1)+'% retained';$('nd-error').textContent=`${k} of ${n} dimensions · retained variance ${fmt(kept)} · residual variance ${fmt(Math.max(0,total-kept))}`;const root=$('spectrum');root.replaceChildren();const pad=54,w=560,h=260,unit=(w-2*pad)/n,Y=v=>h-pad-v/9*(h-2*pad);for(const val of [0,2,4,6,8]){add(root,'line',{x1:pad,y1:Y(val),x2:w-pad,y2:Y(val),stroke:palette.grid});add(root,'text',{x:pad-9,y:Y(val)+3,'text-anchor':'end','font-size':10,fill:palette.muted},val);}vals.forEach((v,i)=>{const x=pad+unit*i;add(root,'rect',{x:x+unit*.18,y:Y(v),width:unit*.64,height:Y(0)-Y(v),rx:3,fill:i<k?palette.green:'#dce4e5'});add(root,'text',{x:x+unit/2,y:h-19,'text-anchor':'middle','font-size':10,fill:palette.muted},'λ'+(i+1));});}
+$('cov-form').addEventListener('submit',e=>{e.preventDefault();const previous=state.seed;state.seed++;if(!generate())state.seed=previous;});
+$('s12').addEventListener('input',()=>{$('s21').textContent=$('s12').value||'—';});
+for(const id of ['s11','s12','s22'])$(id).addEventListener('input',()=>{$('preset').value='custom';});
+$('preset').addEventListener('change',()=>{const presets={default:[5,1,5],strong:[5,4.5,5],negative:[5,-3.8,5],isotropic:[5,0,5],rankone:[5,5,5]},c=presets[$('preset').value];if(!c)return;['s11','s12','s22'].forEach((id,i)=>$(id).value=c[i]);$('s21').textContent=c[1];state.seed++;generate();});
+$('angle').addEventListener('input',()=>{state.theta=+$('angle').value;updateProjection();});
+for(const [id,index] of [['use-pc1',0],['use-pc2',1]])$(id).addEventListener('click',()=>{const v=state.eig.vectors[index];state.theta=(Math.atan2(v[1],v[0])*180/Math.PI+180)%180;updateProjection();});
+$('show-projections').addEventListener('change',drawScatter);
+$('show-pca-axes').addEventListener('change',drawScatter);
+for(const id of ['n-range','k-range'])$(id).addEventListener('input',drawSpectrum);
+$('download').addEventListener('click',()=>{const csv='x1,x2\n'+state.points.map(p=>p.join(',')).join('\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=`pca-dataset-seed-${state.seed}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+const observer=new IntersectionObserver(entries=>{for(const e of entries)if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.id));}},{rootMargin:'-10% 0px -60% 0px'});document.querySelectorAll('.lesson-section').forEach(s=>observer.observe(s));
+generate();drawSpectrum();
+</script>
+</body>
+</html>
