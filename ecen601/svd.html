@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="An independent general SVD calculator with explicit outer products, followed by a real 3 by 2 colored-grid visualization."><meta name="theme-color" content="#146c6a"><title>Singular value decomposition — calculator and geometry</title><style>:root{color-scheme:light;--ink:#172c36;--muted:#51646d;--teal:#146c6a;--rust:#a25622;--line:#dce4e5;--v:#146bb5;--s:#a25622;--u:#146c6a;--second:#7946b4;--vector:#bd530a}
+*{box-sizing:border-box}body{margin:0;background:#f4f6f5;color:var(--ink);font:18px/1.65 "Segoe UI",Arial,sans-serif}main{max-width:1400px;margin:32px auto;padding:46px 54px;background:#fff}h1{margin:0 0 16px;font-size:clamp(32px,4vw,46px);line-height:1.17;font-weight:650;letter-spacing:-.035em}h2{font-size:27px;line-height:1.3;font-weight:600;letter-spacing:-.02em;margin:0}h3{font-size:21px;margin:0}p{margin:10px 0;color:var(--muted)}a{color:var(--teal);text-underline-offset:4px}.eyebrow{color:var(--teal);font-size:14px;font-weight:650;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}.intro{font-size:20px;max-width:1040px}.contents{display:flex;gap:12px 28px;flex-wrap:wrap;margin:23px 0;font-size:16px}.contents a{text-decoration:none;border-bottom:1px solid var(--teal)}.lesson-section{margin-top:34px;padding-top:27px;border-top:2px solid var(--teal)}.section-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:18px}.step-number{font-size:15px;color:var(--teal)}.section-description,.hint,.notation-note,.geometry-note{font-size:16px;line-height:1.75}.hint{margin:9px 0;color:var(--muted)}.math,.matrix-name{font-family:"Cambria Math","Times New Roman",serif;font-style:italic}.math{font-size:1.15em}.u-color{color:var(--u)}.v-color{color:var(--v)}.s-color{color:var(--s)}button,input,textarea,select{font:inherit}button{cursor:pointer;color:var(--teal);background:#fff;border:1px solid var(--teal);border-radius:4px;padding:9px 14px;font-size:16px;font-weight:600}button:hover{background:#e9f5f3}button:disabled{opacity:.4;cursor:default}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,svg:focus-visible{outline:3px solid #d18c39;outline-offset:3px}select,textarea{padding:10px;border:1px solid #9cafb5;border-radius:4px;background:#fff;color:var(--ink)}select{max-width:100%;font-size:16px}input[type=range]{accent-color:var(--teal);cursor:pointer;width:100%}input[type=checkbox]{accent-color:var(--teal)}[hidden]{display:none!important}.editor{background:#f1f7f6;padding:24px;border:1px solid var(--line);border-radius:4px}.editor-grid{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:28px;align-items:start}.field-label{display:block;font-size:15px;font-weight:600;color:var(--muted);margin:0 0 7px}.editor select{width:100%;margin-bottom:14px}.editor-label{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.editor-label span{font-size:13px;color:var(--muted)}textarea{display:block;width:100%;min-height:155px;resize:vertical;font:21px/1.65 Consolas,monospace;white-space:pre}.primary{background:var(--teal);color:#fff;display:flex;width:100%;justify-content:space-between;margin-top:12px}.primary:hover{background:#105654}.error{font-size:16px;color:#a12820}.badge{color:var(--teal);font-size:15px;margin-left:auto}.stats>div{display:flex;justify-content:space-between;font-size:15px;gap:12px;margin:10px 0}.stats strong{font-weight:600;font-variant-numeric:tabular-nums}.text-button{font-size:15px;margin-top:8px}.local-note{font-size:13px}.local-note span{color:var(--teal)}.segmented{display:flex;flex-wrap:wrap;gap:6px}.segmented button{font-size:15px;padding:8px 13px;border-color:#b3c6c7}.segmented button.active{color:#fff;background:var(--teal);border-color:var(--teal)}.geometry-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}.check{font-size:15px;display:flex;gap:7px;align-items:center}.grid-toolbar{display:flex;gap:14px 24px;align-items:center;flex-wrap:wrap;background:#f1f7f6;padding:15px 18px;margin:16px 0}.grid-toolbar label{font-size:15px;display:flex;gap:10px;align-items:center}.grid-toolbar select{padding:5px}.color-ramp{width:115px;height:10px;background:linear-gradient(to right,#176bff,#879c90,#f4bc26);display:inline-block;border-radius:2px}.grid-flow{padding:13px 18px;background:#f1f7f6;border-left:4px solid var(--teal);font-size:20px;overflow-x:auto;white-space:nowrap;margin:18px 0}.plots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.plot{min-width:0;border:1px solid var(--line);border-radius:4px;padding:17px 18px;background:#fff}.plot-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}.plot-heading .math{font-size:23px}.plot-heading small{font-size:14px;color:var(--muted)}.plot svg{width:100%;display:block;aspect-ratio:480/350;background:#fbfcfb;touch-action:none;user-select:none;border:1px solid #e9eeee;border-radius:2px}.plot svg[data-orbit]{cursor:grab}.plot svg[data-orbit]:active{cursor:grabbing}.plot svg text{font:14px "Segoe UI",Arial,sans-serif;fill:var(--muted)}.plot svg .axis-label{font:italic 18px "Cambria Math",serif;fill:var(--ink)}.plot-caption{font-size:15px;line-height:1.7;margin:12px 0 0}.point-dot{cursor:pointer}.geometry-note{padding:15px 19px;background:#f1f7f6;border-left:4px solid var(--teal);margin:20px 0}.camera-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;align-items:center;gap:24px;margin:15px 0}.camera-controls label,.point-controls label{font-size:15px}.camera-controls output,.point-controls output{font-variant-numeric:tabular-nums;color:var(--teal)}.camera-controls input,.point-controls input{display:block;margin-top:10px}.point-controls{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:17px 20px;background:#f1f7f6;margin-top:18px}.grid-readout{display:grid;grid-template-columns:1fr 1fr;gap:10px 24px;margin-top:16px}.grid-readout>div{background:#f4f6f5;padding:12px 16px;overflow-x:auto;white-space:nowrap;font:16px/1.6 Consolas,monospace;border-left:3px solid var(--teal)}.grid-readout strong{font:600 15px "Segoe UI",Arial,sans-serif;display:block;margin-bottom:7px;color:var(--muted)}.vector-control{display:flex;align-items:center;gap:16px;margin-top:20px}.slider-wrap{flex:1}.slider-wrap label{display:flex;justify-content:space-between;font-size:16px}.play-button{border-radius:50%;width:42px;height:42px}.subtle-button{font-size:23px;padding:2px 12px}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin:15px 0}.legend>span{display:flex;align-items:center;gap:7px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}.v-bg{background:var(--v)}.second-bg{background:var(--second)}.vector-bg{background:var(--vector)}.vector-readout{padding:14px 18px;background:#f4f6f5;font:15px/1.6 Consolas,monospace;overflow-x:auto}.precision-label{margin-left:auto;color:var(--muted);font-size:15px;display:flex;gap:12px;align-items:center}.precision-label select{padding:4px 8px}.factor-toolbar{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.factor-toolbar p{font-size:16px;margin:0}.matrix-product{display:flex;align-items:center;gap:20px;overflow-x:auto;padding:30px 2px;max-width:100%}.matrix-block{display:flex;flex-direction:column;align-items:center;gap:9px;flex-shrink:0}.matrix-name{font-size:25px}.matrix-name sup{font-size:15px}.matrix-name sub{font-size:16px}.matrix{position:relative;display:grid;gap:10px 19px;padding:6px 13px;text-align:center;font:19px/1.45 "Cambria Math",Consolas,serif;white-space:nowrap;font-variant-numeric:tabular-nums}.matrix:before,.matrix:after{content:'';position:absolute;top:0;bottom:0;width:6px;border:2px solid currentColor}.matrix:before{left:0;border-right:0}.matrix:after{right:0;border-left:0}.matrix span{min-width:30px;color:var(--ink)}.matrix .zero{color:#94a6aa}.matrix .diag{color:var(--s);font-weight:650}.matrix-size{font-size:14px;color:var(--muted)}.operator{font:28px "Cambria Math",serif;color:var(--muted)}.input-block{border-right:1px solid var(--line);padding-right:22px}.factor-footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:15px}.verification{color:var(--teal);font-size:15px}.notation-note{background:#f4f6f5;padding:15px 18px;margin-top:18px}.lower-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:32px}.lower-grid>article{min-width:0}.rank-equation{font-size:23px;overflow-x:auto;white-space:nowrap;padding:15px 0}.rank-slider{padding-top:16px;border-top:1px solid var(--line);font-size:16px}.singular-bars{display:grid;gap:12px;margin:22px 0;max-height:220px;overflow:auto}.bar-row{display:flex;gap:15px;align-items:center;font-size:16px}.bar-row>span{width:35px;flex-shrink:0}.bar-track{height:8px;flex:1;background:#f1e9e1}.bar-fill{height:100%;background:var(--s)}.bar-row.omitted{opacity:.35}.bar-row strong{font-size:15px;min-width:70px;font-weight:500;text-align:right}.approximation{display:flex;gap:17px;align-items:center;overflow:auto;margin:15px 0}.insight-card{background:#f1f7f6;padding:23px}.insight-card h2{font-size:25px}.insight-card>p{font-size:16px}.mini-lesson{display:flex;gap:18px;align-items:center;border-top:1px solid var(--line);padding:12px 0}.mini-lesson>.math{width:33px;flex-shrink:0;font-size:26px}.mini-lesson p{font-size:16px;margin:0}.next-lesson{margin-top:20px;border-top:1px solid var(--line);padding-top:16px;font-size:16px}.next-lesson>span{color:var(--teal);font-size:13px}.next-lesson small{color:var(--muted)}footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:35px;padding-top:20px;font-size:14px;color:var(--muted)}.empty-note{font-size:16px;color:var(--muted)}.grid-legend{font-size:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.grid-legend small{font-size:14px;color:var(--muted)}
+@media(max-width:1000px){main{padding:32px}.editor-grid{grid-template-columns:1fr 1fr}.editor-grid>div:last-child{grid-column:1/-1}.stats{display:flex;gap:10px 25px;flex-wrap:wrap}.stats>div{gap:15px}.camera-controls{grid-template-columns:1fr 1fr}.lower-grid{grid-template-columns:1fr}.plots{gap:14px}.plot{padding:12px}}
+@media(max-width:650px){body{background:#fff;font-size:16px}main{margin:0;padding:26px 18px}.intro{font-size:17px}h2{font-size:23px}.editor{padding:18px}.editor-grid,.plots,.grid-readout{grid-template-columns:1fr}.editor-grid>div:last-child{grid-column:auto}.editor-grid{gap:18px}.plots .plot{grid-column:1!important;grid-row:auto!important}.plots .plot[data-panel-stage="0"]{order:0}.plots .plot[data-panel-stage="1"]{order:1}.plots .plot[data-panel-stage="2"]{order:2}.plots .plot[data-panel-stage="3"]{order:3}.camera-controls{gap:14px}.point-controls{gap:18px;padding:13px}.matrix{font-size:17px}.section-description,.hint,.geometry-note,.notation-note{font-size:15px}.grid-flow{font-size:17px}.contents{font-size:14px}.segmented button{font-size:14px}.precision-label{margin-left:0}.matrix-product{gap:15px}.section-top{margin-bottom:13px}}
+@media print{body{background:#fff;font-size:11pt}main{padding:0;margin:0;max-width:none}.contents,.editor-grid,.geometry-toolbar,.camera-controls,.point-controls,.vector-control,button,.grid-toolbar{display:none}.plot,.insight-card{break-inside:avoid}.plots{grid-template-columns:1fr 1fr}.lesson-section{margin-top:20px}.lower-grid{grid-template-columns:1fr}.grid-flow,.geometry-note{print-color-adjust:exact}}
+
+.subsection{margin-top:30px;padding-top:23px;border-top:1px solid var(--line)}.outer-term{margin:17px 0;padding:16px 20px;border:1px solid var(--line);border-radius:4px}.outer-term summary{cursor:pointer;color:var(--teal);font-weight:600;font-size:17px}.outer-term .matrix-product{padding:22px 2px 12px}.outer-scalar{font:24px "Cambria Math",serif;color:var(--rust);white-space:nowrap}.optional-experiment{margin-top:24px;padding:17px 21px;background:#f1f7f6}.optional-experiment>summary{cursor:pointer;color:var(--teal);font-weight:600}.calc-status{font-size:15px;color:var(--muted)}.vis-editor{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}.vis-matrix{display:flex;gap:18px;align-items:center;justify-content:center}.vis-bracket{display:grid;grid-template-columns:90px 90px;gap:10px;position:relative;padding:8px 15px;border-left:2px solid var(--ink);border-right:2px solid var(--ink)}.vis-bracket:before,.vis-bracket:after{content:'';position:absolute;left:0;right:0;height:5px;border-left:6px solid var(--ink);border-right:6px solid var(--ink)}.vis-bracket:before{top:0}.vis-bracket:after{bottom:0}.vis-bracket input{width:90px;min-width:0;padding:8px;text-align:center;border:1px solid #9cafb5;border-radius:4px;background:white;color:var(--ink);font:22px "Cambria Math",serif}.vis-editor select{display:block;width:100%;margin:8px 0 16px}.visualization-status{color:var(--teal);font-size:16px}.results-intro{font-size:16px}.section-note{padding:14px 18px;background:#f1f7f6;border-left:4px solid var(--teal)}
+@media(max-width:650px){.vis-editor{grid-template-columns:1fr;gap:22px}.outer-term{padding:13px 12px}.outer-term .matrix-product{gap:12px}.outer-scalar{font-size:21px}}
+.movie-lead{max-width:1060px}.movie-vector{text-decoration:underline;text-underline-offset:3px}.movie-formula{font:22px/1.8 "Cambria Math","Times New Roman",serif;color:var(--ink);overflow-x:auto;padding:13px 18px;background:#f1f7f6;margin:18px 0}.movie-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:4px;margin:16px 0}.movie-table{border-collapse:collapse;width:100%;min-width:780px;font-size:16px;font-variant-numeric:tabular-nums}.movie-table th,.movie-table td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:center}.movie-table th{font-weight:600;background:#f4f8f7}.movie-table th:first-child{text-align:left;min-width:190px}.movie-table small{display:block;font-size:13px;line-height:1.5;color:var(--muted);font-weight:400}.movie-table td.movie-selected{background:#e0efec;box-shadow:inset 0 0 0 2px var(--teal);font-weight:700}.movie-table caption{text-align:left;padding:12px 14px;font-size:15px;color:var(--muted)}.movie-controls{display:flex;gap:18px 28px;align-items:end;flex-wrap:wrap;margin:20px 0}.movie-controls label{font-size:15px;color:var(--muted)}.movie-controls select{display:block;margin-top:5px}.movie-pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:22px 0}.movie-card{padding:21px;border:1px solid var(--line);border-radius:4px;min-width:0}.movie-card p{font-size:16px}.movie-bars{display:grid;gap:12px;margin:22px 0}.movie-bar{display:grid;grid-template-columns:minmax(110px,145px) 1fr 60px;gap:10px;align-items:center;font-size:15px}.movie-bar>strong{font-weight:500;text-align:right;font-variant-numeric:tabular-nums}.movie-bar-track{height:20px;position:relative;background:linear-gradient(90deg,#faf0e7 50%,#edf5f3 50%)}.movie-bar-track:before{content:'';position:absolute;left:50%;height:100%;border-left:1px solid #819899}.movie-bar-fill{position:absolute;top:3px;height:14px;background:var(--teal)}.movie-bar-fill.negative{background:var(--rust)}.movie-bar-key{display:flex;justify-content:space-between;margin-left:155px;margin-right:70px;font-size:12px;color:var(--muted)}.movie-component-facts{font-size:16px;padding:16px 20px;background:#f1f7f6}.movie-rank{max-width:640px;margin:24px 0}.movie-rank label{font-size:17px}.movie-rank output{font-weight:600;color:var(--teal)}.movie-terms{font-variant-numeric:tabular-nums;font-size:16px}.movie-terms ol{padding-left:24px}.movie-terms li{padding:6px 0}.movie-omitted{color:var(--muted)}.movie-kept{color:var(--teal);font-weight:600}.movie-metric{font-variant-numeric:tabular-nums;color:var(--teal);font-size:16px}.movie-compact{font-size:16px;margin:20px 0}.movie-compact>summary{color:var(--teal);cursor:pointer;font-weight:600}.movie-caveat{font-size:16px}.movie-table tr:last-child>*{border-bottom:0}
+@media(max-width:800px){.movie-pair{grid-template-columns:1fr}.movie-card{padding:17px}.movie-bar{grid-template-columns:125px 1fr 52px;gap:8px;font-size:14px}.movie-bar-key{margin-left:133px;margin-right:60px}.movie-formula{font-size:20px;white-space:nowrap}.movie-table{font-size:15px}.movie-controls{gap:14px}.movie-controls select{max-width:285px}}
+@media print{.movie-controls,.movie-rank{display:none}.movie-pair{grid-template-columns:1fr 1fr}.movie-bar-track,.movie-bar-fill,.movie-table th,.movie-table td.movie-selected{print-color-adjust:exact}.movie-scroll{overflow:visible}.movie-table{min-width:0;font-size:9pt}.movie-table th,.movie-table td{padding:6px}.movie-card{break-inside:avoid}}
+</style></head>
+<body><main>
+<header><p class="eyebrow">ECEN 601 · Linear algebra</p><h1>Singular value decomposition</h1><p class="intro">First compute and inspect the SVD of any real or complex matrix. Then explore a separate real transformation from ℝ² to ℝ³ using the colored-grid visualization. Finally, interpret singular vectors through a fictional movie-ratings example.</p><nav class="contents" aria-label="Lesson sections"><a href="#matrixSection">01 · General SVD calculator</a><a href="#geometry">02 · Visualize ℝ² → ℝ³</a><a href="#movies">03 · Movie preferences</a></nav><p class="hint">Lesson 01 · Calculator and geometry. <a href="svd-mathematics.html">Continue to Lesson 02: the mathematics and proof of SVD →</a></p></header>
+<section id="matrixSection" class="lesson-section"><div class="section-top"><span class="step-number">01</span><h2>General SVD calculator</h2><span id="shapeBadge" class="badge">2 × 2</span></div><div class="editor"><div class="editor-grid"><div><label class="field-label" for="preset">Start with an example</label><select id="preset"><option value="tall">ℝ² → ℝ³ · a tilted plane</option><option value="tallrankone">ℝ² → ℝ³ · collapse to a line</option><option value="tallzero">ℝ² → ℝ³ · collapse to a point</option><option value="stretch" selected>Rotate and stretch · 2 × 2</option><option value="shear">Shear · 2 × 2</option><option value="reflection">Reflection · 2 × 2</option><option value="rankone">Rank one · 2 × 2</option><option value="wide">Wide matrix · 2 × 3</option><option value="complex">Complex matrix · 2 × 2</option><option value="zero">Zero matrix · 2 × 2</option></select><p id="inputHint" class="hint">One row per line; separate entries with spaces or commas. Complex entries use <code>2+3i</code>. Any shape up to 32 × 32.</p><button id="compute" class="primary">Compute SVD <span>→</span></button></div><div><div class="editor-label"><label class="field-label" for="matrixInput">Matrix A</label><span>Ctrl / Cmd + Enter to compute</span></div><textarea id="matrixInput" spellcheck="false" rows="3" aria-describedby="inputHint inputError">2  1
+1  2</textarea><p id="inputError" class="error" role="alert" hidden></p></div><div><span class="field-label">At a glance</span><div id="stats" class="stats" aria-live="polite"></div><button id="download" class="text-button">Download decomposition ↓</button><p class="local-note">Computed in your browser · works offline</p></div></div></div><p id="calcStatus" class="calc-status" role="status"></p>
+<div id="calculatorResults">
+<div id="factorization" class="subsection"><div class="section-top"><h2>The decomposition, explicitly</h2><label class="precision-label">Decimals <select id="precision" aria-label="Display decimal precision"><option value="3">3</option><option value="5">5</option><option value="8">8</option></select></label></div><div class="factor-toolbar"><div id="formTabs" class="segmented" aria-label="Factorization form"><button data-form="full" class="active" aria-pressed="true">Full form</button><button data-form="economy" aria-pressed="false">Economy form</button><button data-form="compact" aria-pressed="false">Compact form</button></div><p id="formDescription"></p></div><div id="matrixProduct" class="matrix-product" aria-live="polite"></div><div class="factor-footer"><span id="dimensionIdentity" class="math"></span><span id="errorBadge" class="verification"></span></div><p class="notation-note"><span class="math">H</span> means conjugate transpose. For real matrices, <span class="math">V<sup>H</sup> = V<sup>T</sup></span>. Singular values are nonnegative and sorted from largest to smallest. Bases can differ by signs or phases; repeated singular values also permit different orthonormal bases. Rank is numerical, using a floating-point tolerance.</p></div>
+
+<div id="outerProductSection" class="subsection"><h3>The sum of outer products</h3><p class="section-description math">A = ∑<sub>i=1</sub><sup>r</sup> σ<sub>i</sub>u<sub>i</sub>v<sub>i</sub><sup>H</sup></p><p class="hint">Each column of U pairs with the corresponding conjugate-transposed column of V. Multiplying by its singular value gives one m × n matrix; adding these matrices recovers A. Only numerically nonzero singular values are included.</p><div id="outerSum" class="matrix-product"></div><div id="outerProducts"></div></div>
+<details id="reconstruction" class="optional-experiment"><summary>Explore a partial reconstruction</summary><p class="hint">Keep the first k outer-product terms to form A<sub>k</sub>. This affects only the calculator.</p><div id="rankEquation" class="rank-equation math"></div><div class="rank-slider"><label for="rankSlider">Keep the first <strong id="rankLabel">2</strong> directions</label><input id="rankSlider" type="range" min="0" max="2" value="2"></div><div id="singularBars" class="singular-bars"></div><div id="approximation" class="approximation"></div><p id="retainedEnergy" class="hint"></p></details>
+</div></section>
+<section id="geometry" class="lesson-section"><div class="section-top"><span class="step-number">02</span><h2>Visualize a map from ℝ² to ℝ³</h2><span class="badge">Real 3 × 2 matrices only</span></div><p class="section-description">Enter a new matrix <span class="math">B ∈ ℝ<sup>3 × 2</sup></span>. This section computes its own SVD and uses its own input; it is independent of matrix A above.</p>
+<div class="editor vis-editor"><div><label class="field-label" for="visPreset">Visualization examples</label><select id="visPreset"><option value="plane">A tilted plane · rank 2</option><option value="line">Collapse to a line · rank 1</option><option value="zero">Collapse to a point · rank 0</option></select><p class="hint">Six real entries: three output coordinates and two input coordinates. Ctrl / Cmd + Enter also updates the visualization.</p><button id="computeVisualization" class="primary">Update visualization <span>→</span></button></div><div><p class="field-label">Visualization matrix B</p><div class="vis-matrix"><span class="math">B =</span><div id="visMatrix" class="vis-bracket" role="group" aria-label="Real 3 by 2 visualization matrix B"><input type="number" step="any" value="1" aria-label="B row 1 column 1"><input type="number" step="any" value="0" aria-label="B row 1 column 2"><input type="number" step="any" value="0" aria-label="B row 2 column 1"><input type="number" step="any" value="2" aria-label="B row 2 column 2"><input type="number" step="any" value="1" aria-label="B row 3 column 1"><input type="number" step="any" value="1" aria-label="B row 3 column 2"></div></div><p id="visError" class="error" role="alert" hidden></p></div></div><p id="visStatus" class="visualization-status" role="status"></p>
+<div id="visualizationResults"><p class="section-description">The same colored square grid passes through Vᵀ, Σ, and U, ending at BX. Colors stay attached to the original input points.</p><div class="geometry-toolbar"><span class="math">B = UΣV<sup>T</sup></span><label class="check"><input id="showGrid" type="checkbox" checked> Coordinate grid</label></div>
+<div id="gridExtras"><div class="grid-flow math">01 &nbsp; X &nbsp; <span class="v-color">→ V<sup>T</sup>X</span> &nbsp; <span class="s-color">→ ΣV<sup>T</sup>X</span> &nbsp; <span class="u-color">→ UΣV<sup>T</sup>X = BX</span></div><div class="grid-toolbar"><label for="gridDensity">Grid density <select id="gridDensity"><option value="11">11 × 11</option><option value="21" selected>21 × 21</option><option value="31">31 × 31</option></select></label><div class="grid-legend"><span>Original x₂:</span><span>−1</span><span class="color-ramp" aria-hidden="true"></span><span>+1</span><small>Colors stay attached to the same points.</small></div></div><p class="hint">Follow the numbered panels: 01 → 02 → 03 → 04. Drag either 3D plot to rotate both; scroll over it to zoom. Use the camera sliders or arrow keys for keyboard control.</p></div>
+<div id="plots" class="plots"></div>
+<div id="gridInteractions"><div class="camera-controls"><label for="yaw">Camera azimuth <output id="yawValue">−38°</output><input id="yaw" type="range" min="-180" max="180" step="1" value="-38"></label><label for="pitch">Camera elevation <output id="pitchValue">24°</output><input id="pitch" type="range" min="-80" max="80" step="1" value="24"></label><label for="zoom">Zoom <output id="zoomValue">1.0×</output><input id="zoom" type="range" min="0.5" max="3" step="0.1" value="1"></label><button id="resetCamera">Reset camera</button></div><div class="point-controls"><label for="pointX1">Selected input x₁ = <output id="pointX1Value">0.4</output><input id="pointX1" type="range" min="0" max="20" step="1" value="14"></label><label for="pointX2">Selected input x₂ = <output id="pointX2Value">−0.3</output><input id="pointX2" type="range" min="0" max="20" step="1" value="7"></label></div><p class="hint">Click a colored point in any plot, or use the input sliders. The outlined point is the same point in every panel. The two 3D plots share one camera, equal scales on all axes, and the same coordinate range.</p><div id="gridReadout" class="grid-readout" aria-live="polite"></div></div>
+<p id="geometryNote" class="geometry-note"></p></div></section>
+
+<section id="movies" class="lesson-section" aria-labelledby="moviesTitle">
+<div class="section-top"><span class="step-number">03</span><h2 id="moviesTitle">A practical example: movie preferences</h2><span class="badge">6 users × 5 movies</span></div>
+<p class="movie-lead">Rows are users; columns are movies. These <strong>fictional, complete ratings</strong> use a 1–5 scale, where 5 means a strong preference. The user profiles and genre labels help us interpret the patterns; only the numbers enter the SVD.</p>
+<h3>Start with ratings, then remove each user’s baseline</h3>
+<p class="section-description">Alex favors science fiction, Casey favors romance, and Emery favors animation. Some users also rate everything more generously than others. To study <em>relative preferences</em>, subtract each user’s own mean rating from every entry in that row.</p>
+<div class="movie-controls"><label for="movieDataView">Display the example data<select id="movieDataView"><option value="raw">Original ratings R · 1–5</option><option value="centered">Centered ratings C · relative to user mean</option></select></label></div>
+<p class="hint">On a narrow screen, scroll the tables horizontally to see all five movies.</p><div id="movieDataTable" class="movie-scroll"></div>
+<div class="movie-formula" aria-label="C i j equals R i j minus mu i; C equals R minus mu times one transpose; C equals U Sigma V transpose">C<sub>ij</sub> = R<sub>ij</sub> − μ<sub>i</sub>, &nbsp; C = R − <span class="movie-vector">μ</span><span class="movie-vector">1</span><sup>T</sup> = UΣV<sup>T</sup></div>
+<p class="section-description">Here μ<sub>i</sub> is user i’s mean across the five movies, and <span class="movie-vector">1</span> is a five-entry column of ones. For Alex, μ₁ = 3, so [5, 5, 1, 2, 2] becomes [2, 2, −2, −1, −1]. A positive centered rating means “above this user’s usual rating,” and a negative one means “below it.”</p>
+<details class="movie-compact"><summary>Inspect the numeric SVD of the centered 6 × 5 matrix</summary><p class="hint">Rank-compact form: C = U<sub>r</sub>Σ<sub>r</sub>V<sub>r</sub><sup>T</sup>, with dimensions (6 × 4)(4 × 4)(4 × 5). The full form uses U ∈ ℝ<sup>6 × 6</sup>, Σ ∈ ℝ<sup>6 × 5</sup>, and V ∈ ℝ<sup>5 × 5</sup>.</p><div id="movieFactorization" class="matrix-product"></div></details>
+<div class="subsection"><h3>What do the left and right singular vectors mean?</h3>
+<p class="section-description">For component k, the <strong>right singular vector <span class="movie-vector">v</span><sub>k</sub> ∈ ℝ⁵</strong> gives one weight per movie: a unit-length direction in movie space. The <strong>left singular vector <span class="movie-vector">u</span><sub>k</sub> ∈ ℝ⁶</strong> gives one weight per user: a unit-length pattern across users. The singular value σ<sub>k</sub> tells us how strongly these two patterns are coupled.</p>
+<div class="movie-controls"><label for="movieComponent">Explore a preference component<select id="movieComponent"></select></label></div>
+<div class="movie-pair"><div class="movie-card"><h3 class="v-color">Right vector: movie weights</h3><p id="movieVDescription"></p><div id="movieVBars" class="movie-bars"></div><div class="movie-bar-key" aria-hidden="true"><span>−1</span><span>0</span><span>+1</span></div></div><div class="movie-card"><h3 class="u-color">Left vector: user weights</h3><p id="movieUDescription"></p><div id="movieUBars" class="movie-bars"></div><div class="movie-bar-key" aria-hidden="true"><span>−1</span><span>0</span><span>+1</span></div></div></div>
+<div id="movieComponentFacts" class="movie-component-facts" aria-live="polite"></div>
+<div class="movie-formula">C<span class="movie-vector">v</span><sub>k</sub> = σ<sub>k</sub><span class="movie-vector">u</span><sub>k</sub>, &nbsp; C<sup>T</sup><span class="movie-vector">u</span><sub>k</sub> = σ<sub>k</sub><span class="movie-vector">v</span><sub>k</sub></div>
+<p class="section-description">The first identity is especially useful: take a user’s centered row and dot it with the movie vector. The result is σ<sub>k</sub>u<sub>ik</sub>, that user’s <strong>score along the movie direction</strong>. The entries of <span class="movie-vector">u</span><sub>k</sub> are normalized user weights; the scaled entries σ<sub>k</sub>u<sub>ik</sub> are the corresponding scores. These are different quantities.</p>
+<p class="movie-caveat">These directions are learned from the fictional numbers, so a component can mix genres. They are neither genre labels nor probabilities. Flipping both <span class="movie-vector">u</span><sub>k</sub> and <span class="movie-vector">v</span><sub>k</sub> changes their displayed signs but leaves σ<sub>k</sub><span class="movie-vector">u</span><sub>k</sub><span class="movie-vector">v</span><sub>k</sub><sup>T</sup> unchanged. Interpret the paired signs and contrasts together.</p></div>
+<div class="subsection"><h3>Build the ratings back up, one preference pattern at a time</h3>
+<div class="movie-formula">C<sub>q</sub> = ∑<sub>k=1</sub><sup>q</sup> σ<sub>k</sub><span class="movie-vector">u</span><sub>k</sub><span class="movie-vector">v</span><sub>k</sub><sup>T</sup>, &nbsp; R̂<sub>q</sub> = <span class="movie-vector">μ</span><span class="movie-vector">1</span><sup>T</sup> + C<sub>q</sub></div>
+<p class="section-description">Each outer product contributes a full 6 × 5 preference pattern. A user and movie with weights of the same sign get a positive contribution; opposite signs give a negative contribution. Add the user’s mean back only after summing the centered components.</p>
+<div class="movie-rank"><label for="movieRank">Keep the first <output id="movieRankValue" for="movieRank">2</output> of 4 nonzero components</label><input id="movieRank" type="range" min="0" max="4" value="2" step="1"></div>
+<p id="movieRankStats" class="movie-metric" role="status"></p><div id="movieReconstruction" class="movie-scroll"></div>
+<p class="hint">At q = 0, every movie receives that user’s mean. At q = 4, all original ratings are recovered, up to rounding. Approximate entries are continuous and can fall outside 1–5; no rounding to stars or clipping is applied.</p>
+<div class="movie-controls"><label for="movieUser">Trace one user<select id="movieUser"></select></label><label for="movieFilm">Trace one movie<select id="movieFilm"></select></label></div>
+<div id="movieCellTrace" class="movie-terms" aria-live="polite"></div>
+<details class="movie-compact"><summary>See this component’s full weighted outer product</summary><div id="movieOuterProduct" class="matrix-product"></div></details>
+<p class="movie-caveat">Why only four components? Every centered row sums to zero, so C<span class="movie-vector">1</span> = <span class="movie-vector">0</span>. The five movie columns are dependent: rank(C) ≤ 4, and this example attains rank 4. The fifth singular value is zero and does not describe an additional preference pattern.</p>
+<p class="movie-caveat">This is a demonstration using complete fictional data. The reconstruction compresses known ratings; it does not evaluate recommendations for unseen movies or handle missing ratings. This example has its own fixed dataset and does not change either matrix input above.</p>
+</div></section>
+<footer><span>ECEN 601 · Linear algebra · Self-contained and offline · Displayed numbers are rounded.</span><a href="#matrixSection">Back to the calculator ↑</a></footer>
+</main><script id="svd-script">'use strict';
+// BEGIN NUMERICAL CORE
+
+// One-sided complex Jacobi SVD. Scaling avoids overflow; no A^H A is formed.
+const z=(re=0,im=0)=>({re,im});
+const add=(a,b)=>z(a.re+b.re,a.im+b.im);
+const sub=(a,b)=>z(a.re-b.re,a.im-b.im);
+const mul=(a,b)=>z(a.re*b.re-a.im*b.im,a.re*b.im+a.im*b.re);
+const conj=a=>z(a.re,-a.im);
+const scale=(a,s)=>z(a.re*s,a.im*s);
+const abs=a=>Math.hypot(a.re,a.im);
+const zeros=(m,n)=>Array.from({length:m},()=>Array.from({length:n},()=>z()));
+const eye=n=>Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>z(+(i===j))));
+const adj=A=>A[0].map((_,j)=>A.map(row=>conj(row[j])));
+function matmul(A,B){return A.map(row=>B[0].map((_,j)=>row.reduce((s,a,k)=>add(s,mul(a,B[k][j])),z())));}
+function parseEntry(value){
+  let s=String(value).trim().replace(/−/g,'-').replace(/\s/g,'').replace(/j/gi,'i');
+  const number='(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?';
+  const real=new RegExp('^[+-]?'+number+'$','i');
+  if(real.test(s)){const v=Number(s);if(Number.isFinite(v)&&Math.abs(v)<=1e150)return z(v);}
+  if(s.endsWith('i')){
+    const body=s.slice(0,-1);let cut=-1;
+    for(let k=1;k<body.length;k++)if(/[+-]/.test(body[k])&&!/[eE]/.test(body[k-1]))cut=k;
+    const r=cut<0?'0':body.slice(0,cut), raw=cut<0?body:body.slice(cut), q=raw===''||raw==='+'?'1':raw==='-'?'-1':raw;
+    if(real.test(r)&&real.test(q)){const a=Number(r),b=Number(q);if(Number.isFinite(a)&&Number.isFinite(b)&&Math.max(Math.abs(a),Math.abs(b))<=1e150)return z(a,b);}
+  }
+  throw new Error('Use finite numbers or complex entries such as 2+3i (magnitude at most 10^150).');
+}
+function parseMatrix(text){
+  let rows;
+  const s=text.trim();
+  if(s.startsWith('[[')){try{rows=JSON.parse(s);}catch{throw new Error('Invalid JSON matrix. Use [[1,2],[3,4]] or one row per line.');}}
+  else rows=s.replace(/^\[|\]$/g,'').split(/[;\n]+/).filter(r=>r.trim()).map(r=>r.trim().split(/[\s,\t]+/));
+  if(!rows.length||!Array.isArray(rows[0])||!rows[0].length)throw new Error('Enter at least one matrix entry.');
+  if(rows.length>32||rows[0].length>32)throw new Error('This browser lab supports up to 32 rows and 32 columns.');
+  if(rows.some(r=>!Array.isArray(r)||r.length!==rows[0].length))throw new Error('Each row must contain the same number of entries.');
+  return rows.map(r=>r.map(parseEntry));
+}
+function tall(A){
+  const m=A.length,n=A[0].length;
+  const magnitude=Math.max(...A.flat().map(abs));
+  let B=A.map(row=>row.map(a=>magnitude?z(a.re/magnitude,a.im/magnitude):z())),V=eye(n);
+  let converged=false;
+  for(let sweep=0;sweep<150;sweep++){
+    let changed=false;
+    for(let p=0;p<n-1;p++)for(let q=p+1;q<n;q++){
+      let aa=0,bb=0,g=z();
+      for(let i=0;i<m;i++){aa+=abs(B[i][p])**2;bb+=abs(B[i][q])**2;g=add(g,mul(conj(B[i][p]),B[i][q]));}
+      const h=abs(g);
+      if(!h||h<=8*Number.EPSILON*Math.sqrt(aa)*Math.sqrt(bb))continue;
+      const tau=(bb-aa)/(2*h),t=(tau>=0?1:-1)/(Math.abs(tau)+Math.hypot(1,tau)),c=1/Math.hypot(1,t),s=c*t,phase=scale(g,1/h);
+      const rotate=M=>{for(let i=0;i<M.length;i++){const x=M[i][p],y=M[i][q];M[i][p]=sub(scale(x,c),scale(mul(conj(phase),y),s));M[i][q]=add(scale(mul(phase,x),s),scale(y,c));}};
+      rotate(B);rotate(V);changed=true;
+    }
+    if(!changed){converged=true;break;}
+  }
+  if(!converged)throw new Error('The SVD did not converge. Try rescaling the entries.');
+  const norms=B[0].map((_,j)=>Math.hypot(...B.map(row=>abs(row[j]))));
+  const order=norms.map((s,j)=>j).sort((a,b)=>norms[b]-norms[a]);
+  V=V.map(row=>order.map(j=>row[j])); B=B.map(row=>order.map(j=>row[j]));
+  const ss=order.map(j=>norms[j]),tol=16*Number.EPSILON*Math.max(m,n)*(ss[0]||0);
+  const rank=ss.filter(s=>s>tol).length;
+  const cols=[];
+  for(let j=0;j<rank;j++)cols.push(B.map(row=>scale(row[j],1/ss[j])));
+  // Complete the orthonormal basis, including all null-space columns.
+  while(cols.length<m){
+    let best=null,bestNorm=-1;
+    for(let k=0;k<m;k++){
+      let v=Array.from({length:m},(_,i)=>z(+(i===k)));
+      for(let pass=0;pass<2;pass++)for(const u of cols){let dot=z();for(let i=0;i<m;i++)dot=add(dot,mul(conj(u[i]),v[i]));v=v.map((x,i)=>sub(x,mul(u[i],dot)));}
+      const norm=Math.hypot(...v.map(abs));if(norm>bestNorm){best=v;bestNorm=norm;}
+    }
+    if(bestNorm<1e-10)throw new Error('Could not complete an orthonormal basis.');
+    cols.push(best.map(x=>scale(x,1/bestNorm)));
+  }
+  return {U:Array.from({length:m},(_,i)=>cols.map(col=>col[i])),V,s:ss.map((v,j)=>j<rank?v*magnitude:0),rank,tolerance:tol*magnitude};
+}
+function svd(A){
+  const m=A.length,n=A[0].length;
+  let out;
+  if(m>=n)out=tall(A);else{const t=tall(adj(A));out={...t,U:t.V,V:t.U};}
+  const Sigma=zeros(m,n);out.s.forEach((s,i)=>Sigma[i][i]=z(s));
+  const VH=adj(out.V),reconstructed=matmul(matmul(out.U,Sigma),VH);
+  const base=Math.max(...A.flat().map(abs))||1;
+  let error=0,norm=0;
+  A.forEach((row,i)=>row.forEach((a,j)=>{error+=(abs(sub(a,reconstructed[i][j]))/base)**2;norm+=(abs(a)/base)**2;}));
+  return {...out,Sigma,VH,reconstructed,m,n,error:Math.sqrt(error)/(Math.sqrt(norm)||1),complex:A.some(r=>r.some(v=>v.im!==0))};
+}
+
+
+// Explicit weighted outer product, including conjugation through V^H.
+function outerTerm(decomposition,k){return decomposition.U.map(row=>decomposition.VH[k].map(v=>scale(mul(row[k],v),decomposition.s[k])));}
+function visualizationMatrix(values){
+  if(values.length!==6)throw new Error('The visualization requires exactly six real entries (3 rows × 2 columns).');
+  let entries;
+  try{entries=values.map(parseEntry);}catch{throw new Error('Enter all six entries as finite real numbers (magnitude at most 10^150).');}
+  if(entries.some(v=>v.im!==0))throw new Error('The visualization requires real entries for a map from ℝ² to ℝ³.');
+  return [entries.slice(0,2),entries.slice(2,4),entries.slice(4,6)];
+}
+
+// END NUMERICAL CORE
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const examples={stretch:'2  1\n1  2',shear:'1  1.5\n0  1',reflection:'1  0\n0  -2',rankone:'1  2\n2  4',tall:'1  0\n0  2\n1  1',wide:'1  0  1\n0  2  1',complex:'1  i\n0  2',zero:'0  0\n0  0',tallrankone:'1  2\n2  4\n-1  -2',tallzero:'0  0\n0  0\n0  0'};
+let A,D,form='full',digits=3,kept=2;
+const colors={v:'#547bc3',second:'#b777b0',vector:'#e67c43',u:'#218575',s:'#cc7939'};
+function fmt(x,p=digits){if(x===0)return '0';if(Math.abs(x)<10**(-p)*.5)return Math.abs(x)<1e-10?x.toExponential(2):'0';if(Math.abs(x)>=1e5||Math.abs(x)<1e-3)return x.toExponential(Math.min(p,3));return Number(x.toFixed(p)).toString();}
+function cf(a){if(!a.im)return fmt(a.re);if(!a.re)return `${fmt(a.im)}i`;return `${fmt(a.re)}${a.im<0?'−':'+'}${fmt(Math.abs(a.im))}i`;}
+function matrix(M,name,tone='',size){
+  const rows=M.length,cols=M[0]?.length||0;
+  return `<div class="matrix-block ${tone}"><div class="matrix-name">${name}</div>${rows&&cols?`<div class="matrix" style="grid-template-columns:repeat(${cols},auto)">${M.flatMap((r,i)=>r.map((v,j)=>`<span class="${abs(v)===0?'zero':tone==='s-color'&&i===j?'diag':''}">${cf(v)}</span>`)).join('')}</div>`:'<div class="empty-note">empty factor</div>'}<div class="matrix-size">${size||`${rows} × ${cols}`}</div></div>`;
+}
+function renderFactor(){
+  const {m,n,rank:r}=D,p=Math.min(m,n),q=form==='full'?null:form==='economy'?p:r;
+  let U=q===null?D.U:D.U.map(row=>row.slice(0,q)),S=q===null?D.Sigma:zeros(q,q),VH=q===null?D.VH:D.VH.slice(0,q);
+  if(q!==null)for(let i=0;i<q;i++)S[i][i]=z(D.s[i]);
+  const suffix=form==='full'?'':form==='economy'?'<sub>p</sub>':'<sub>r</sub>';
+  $('#matrixProduct').innerHTML=matrix(A,'A','input-block')+'<span class="operator">=</span>'+matrix(U,'U'+suffix,'u-color',`${m} × ${q??m}`)+'<span class="operator">·</span>'+matrix(S,'Σ'+suffix,'s-color',`${q??m} × ${q??n}`)+'<span class="operator">·</span>'+matrix(VH,'V'+suffix+'<sup>H</sup>','v-color',`${q??n} × ${n}`);
+  $('#formDescription').textContent=form==='full'?'Complete orthonormal bases, including null-space directions.':form==='economy'?`Keep p = min(m, n) = ${p} columns; keep all p singular values.`:`Keep only r = ${r} numerically nonzero singular values and their directions.`;
+  $('#dimensionIdentity').innerHTML=`(${m} × ${n}) = (${m} × ${q??m}) (${q??m} × ${q??n}) (${q??n} × ${n})`;
+  $('#errorBadge').textContent=`✓ Relative reconstruction error: ${D.error.toExponential(1)}`;
+  $$('#formTabs button').forEach(b=>{b.classList.toggle('active',b.dataset.form===form);b.setAttribute('aria-pressed',b.dataset.form===form);});
+}
+function renderStats(){
+  const nonzero=D.s.filter(s=>s>0),cond=D.rank<Math.min(D.m,D.n)?'∞':nonzero.length?fmt(nonzero[0]/nonzero.at(-1)):'∞';
+  $('#shapeBadge').textContent=`${D.m} × ${D.n}`;
+  $('#stats').innerHTML=[['Dimensions',`${D.m} × ${D.n}`],['Numerical rank',`${D.rank}`],['Singular values',D.s.length<=3?D.s.map(v=>fmt(v)).join(', '):`${D.s.length} values ↓`],['Condition number',cond],['Entries',D.complex?'Complex':'Real']].map(([k,v])=>`<div><span>${k}</span><strong>${v}</strong></div>`).join('');
+  $('#stats').title=`Numerical rank uses a relative floating-point tolerance (${D.tolerance.toExponential(2)}). Condition number uses the largest / smallest of min(m,n) singular values.`;
+}
+function renderRank(){
+  const p=D.s.length;kept=Math.min(kept,p);$('#rankSlider').max=p;$('#rankSlider').value=kept;$('#rankLabel').textContent=kept;
+  $('#rankEquation').innerHTML=`A = ${D.rank===0?'0':D.rank<=4?Array.from({length:D.rank},(_,i)=>`<span class="s-color">${fmt(D.s[i])}</span> u<sub>${i+1}</sub>v<sub>${i+1}</sub><sup>H</sup>`).join(' + '):`∑<sub>i=1</sub><sup>${D.rank}</sup> σ<sub>i</sub>u<sub>i</sub>v<sub>i</sub><sup>H</sup>`}`;
+  $('#singularBars').innerHTML=D.s.map((s,i)=>`<div class="bar-row ${i>=kept?'omitted':''}"><span class="math">σ<sub>${i+1}</sub></span><div class="bar-track"><div class="bar-fill" style="width:${D.s[0]?100*s/D.s[0]:0}%"></div></div><strong>${fmt(s)}</strong></div>`).join('');
+  const R=zeros(D.m,D.n);for(let i=0;i<D.m;i++)for(let j=0;j<D.n;j++)for(let k=0;k<kept;k++){const u=D.U[i][k],v=D.VH[k][j];R[i][j]=add(R[i][j],scale(z(u.re*v.re-u.im*v.im,u.re*v.im+u.im*v.re),D.s[k]));}
+  $('#approximation').innerHTML=`<span class="math">A<sub>${kept}</sub> =</span>`+matrix(R,'');
+  const total=D.s.reduce((v,s)=>v+(D.s[0]?s/D.s[0]:0)**2,0),partial=D.s.slice(0,kept).reduce((v,s)=>v+(D.s[0]?s/D.s[0]:0)**2,0);
+  $('#retainedEnergy').textContent=total?`${(100*partial/total).toFixed(2)}% of squared Frobenius norm retained · relative error ${Math.sqrt(Math.max(0,1-partial/total)).toExponential(2)}`:'Zero matrix: the reconstruction is exact for every choice. Retained-energy percentage is undefined (0 / 0).';
+}
+
+function renderOuterProducts(){
+  $('#outerSum').innerHTML=matrix(A,'A','input-block')+'<span class="operator">=</span>'+(D.rank?Array.from({length:D.rank},(_,k)=>matrix(outerTerm(D,k),'σ<sub>'+(k+1)+'</sub>u<sub>'+(k+1)+'</sub>v<sub>'+(k+1)+'</sub><sup>H</sup>','s-color')).join('<span class="operator">+</span>'):matrix(zeros(D.m,D.n),'0'));
+  $('#outerProducts').innerHTML=D.rank?Array.from({length:D.rank},(_,k)=>{
+    const u=D.U.map(row=>[row[k]]),vh=[D.VH[k]],term=outerTerm(D,k),i=k+1;
+    return '<details class="outer-term" '+(D.rank<=4&&D.m<=6&&D.n<=6?'open':'')+'><summary>Term '+i+': σ'+i+' u'+i+' v'+i+'ᴴ</summary><div class="matrix-product"><span class="outer-scalar">'+fmt(D.s[k])+'</span><span class="operator">·</span>'+matrix(u,'u<sub>'+i+'</sub>','u-color')+'<span class="operator">·</span>'+matrix(vh,'v<sub>'+i+'</sub><sup>H</sup>','v-color')+'<span class="operator">=</span>'+matrix(term,'σ<sub>'+i+'</sub>u<sub>'+i+'</sub>v<sub>'+i+'</sub><sup>H</sup>','s-color')+'</div></details>';
+  }).join(''):'<p class="hint">There are no nonzero outer-product terms. The sum is the zero matrix.</p>';
+}
+function compute(){
+  try{const input=parseMatrix($('#matrixInput').value),decomposition=svd(input);A=input;D=decomposition;kept=D.s.length;
+    $('#inputError').hidden=true;$('#calculatorResults').hidden=false;$('#download').disabled=false;
+    renderStats();renderFactor();renderOuterProducts();renderRank();$('#calcStatus').textContent='Computed for matrix A. The visualization below has its own independent input.';
+  }catch(e){$('#inputError').textContent=e.message;$('#inputError').hidden=false;$('#calculatorResults').hidden=true;$('#download').disabled=true;$('#calcStatus').textContent='';}
+}
+$('#compute').addEventListener('click',compute);
+$('#matrixInput').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')compute();});
+$('#matrixInput').addEventListener('input',()=>{$('#shapeBadge').textContent='Not computed';$('#calculatorResults').hidden=true;$('#download').disabled=true;$('#calcStatus').textContent='Input edited. Compute SVD to show the new decomposition.';});
+$('#preset').addEventListener('change',()=>{$('#matrixInput').value=examples[$('#preset').value];compute();});
+$('#precision').addEventListener('change',()=>{digits=Number($('#precision').value);if(D){renderFactor();renderStats();renderOuterProducts();renderRank();}});
+$('#formTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b){form=b.dataset.form;renderFactor();}});
+$('#rankSlider').addEventListener('input',()=>{kept=Number($('#rankSlider').value);renderRank();});
+$('#download').addEventListener('click',()=>{const data={A,U:D.U,Sigma:D.Sigma,VH:D.VH,singularValues:D.s,numericalRank:D.rank,rankTolerance:D.tolerance,relativeReconstructionError:D.error,outerProducts:Array.from({length:D.rank},(_,k)=>({singularValue:D.s[k],u:D.U.map(row=>row[k]),vH:D.VH[k],weightedOuterProduct:outerTerm(D,k)})),entries:'Complex entries are {re, im}. Factors are the full SVD of calculator matrix A.'},url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='svd-decomposition.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+let B,GD; const mode='grid'; function gfmt(x,p=3){return fmt(x,p);}
+// Actual ambient-coordinate grid geometry for real R^2 -> R^3 maps.
+let gridCount=21,selectedI=14,selectedJ=7,clouds=[],camera={yaw:-38,pitch:24,zoom:1},orbit=null;
+const isGridMap=()=>GD&&!GD.complex&&GD.m===3&&GD.n===2;
+function gridStages(input,decomposition,x){
+  const realApply=(M,v)=>M.map(row=>row.reduce((s,a,j)=>s+a.re*v[j],0));
+  const rotated=realApply(decomposition.VH,x);
+  const stretched=[decomposition.s[0]*rotated[0],decomposition.s[1]*rotated[1],0];
+  return [x,rotated,stretched,realApply(decomposition.U,stretched)];
+}
+function gridColor(t){const a=t<.5?[23,107,255]:[135,156,144],b=t<.5?[135,156,144]:[244,188,38],u=t<.5?t*2:t*2-1;return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*u)).join(',')})`;}
+function buildClouds(){
+  clouds=[[],[],[],[]];
+  for(let j=0;j<gridCount;j++)for(let i=0;i<gridCount;i++){
+    const id=j*gridCount+i,x=[-1+2*i/(gridCount-1),-1+2*j/(gridCount-1)];
+    gridStages(B,GD,x).forEach((v,k)=>clouds[k].push({v,id,color:gridColor(j/(gridCount-1))}));
+  }
+}
+function selectedStages(){return gridStages(B,GD,[-1+2*selectedI/(gridCount-1),-1+2*selectedJ/(gridCount-1)]);}
+function gridDomain(){const r=Math.max(...clouds[2].map(p=>Math.hypot(...p.v)));return r>0?r*1.12:1;}
+function project3(v,domain){
+  const yaw=camera.yaw*Math.PI/180,pitch=camera.pitch*Math.PI/180;
+  const x=v[0]/domain,y=v[1]/domain,zv=v[2]/domain,side=Math.cos(yaw)*x-Math.sin(yaw)*y,depth=Math.sin(yaw)*x+Math.cos(yaw)*y;
+  return [240+108*camera.zoom*side,171-108*camera.zoom*(Math.cos(pitch)*zv-Math.sin(pitch)*depth),Math.sin(pitch)*zv+Math.cos(pitch)*depth];
+}
+function drawGridPlot(stage){
+  const svg=$(`#plots svg[data-grid-stage="${stage}"]`);if(!svg)return;
+  const three=stage>=2,domain=three?gridDomain():1.65;
+  const project=v=>three?project3(v,domain):[240+145*v[0]/domain,171-145*v[1]/domain,0];
+  const line=(a,b,color,width=1,dash='')=>{const p=project(a),q=project(b);return `<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${color}" stroke-width="${width}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;};
+  let html='';
+  if(three){
+    const r=domain,base=-r;
+    if($('#showGrid').checked){
+      for(let a=-2;a<=2;a++){const u=r*a/2;html+=line([u,-r,base],[u,r,base],'#e1e8e9')+line([-r,u,base],[r,u,base],'#e1e8e9')+line([-r,r,u],[r,r,u],'#e8eded')+line([u,r,-r],[u,r,r],'#e8eded');}
+      const vertices=Array.from({length:8},(_,i)=>[(i&1)?r:-r,(i&2)?r:-r,(i&4)?r:-r]);
+      vertices.forEach((v,i)=>[1,2,4].forEach(bit=>{if(!(i&bit))html+=line(v,vertices[i|bit],'#c2cfd2');}));
+    }
+    const names=stage===2?['w₁','w₂','w₃']:['y₁','y₂','y₃'];
+    for(let k=0;k<3;k++){
+      const lo=[0,0,0],hi=[0,0,0];lo[k]=-r;hi[k]=r;html+=line(lo,hi,'#94a9b1',1.4);const p=project(hi);html+=`<text class="axis-label" x="${p[0]+6}" y="${p[1]-6}">${names[k]}</text>`;
+      for(const fraction of [-.5,.5]){const v=[0,0,0];v[k]=fraction*r;const t=project(v);html+=`<text x="${t[0]+5}" y="${t[1]+14}" style="font-size:11px">${gfmt(fraction*r)}</text>`;}
+    }
+  }else{
+    const r=1.5;
+    if($('#showGrid').checked)for(let a=-3;a<=3;a++){const u=a*.5;html+=line([u,-r],[u,r],'#e4ebec')+line([-r,u],[r,u],'#e4ebec');}
+    html+=line([-r,0],[r,0],'#9cafb5',1.4)+line([0,-r],[0,r],'#9cafb5',1.4);
+    for(const a of [-1,1]){const p=project([a,0]),q=project([0,a]);html+=`<text x="${p[0]}" y="${p[1]+18}" text-anchor="middle">${a}</text><text x="${q[0]-15}" y="${q[1]+4}" text-anchor="end">${a}</text>`;}
+    html+=`<text class="axis-label" x="380" y="193">${stage===0?'x₁':'z₁'}</text><text class="axis-label" x="250" y="34">${stage===0?'x₂':'z₂'}</text>`;
+  }
+  const points=clouds[stage].map(p=>({...p,p:project(p.v)})).sort((a,b)=>a.p[2]-b.p[2]);
+  html+=points.map(p=>`<circle class="point-dot" data-point="${p.id}" cx="${p.p[0]}" cy="${p.p[1]}" r="${gridCount>21?2.1:2.8}" fill="${p.color}" fill-opacity=".93"/>`).join('');
+  const v=selectedStages()[stage],p=project(v),origin=three?[0,0,0]:[0,0];
+  html+=line(origin,v,'#172c36',1.6,'4 3')+`<circle cx="${p[0]}" cy="${p[1]}" r="7" fill="${gridColor(selectedJ/(gridCount-1))}" stroke="#172c36" stroke-width="2.2" pointer-events="none"/><circle cx="${p[0]}" cy="${p[1]}" r="10" fill="none" stroke="white" stroke-width="2" pointer-events="none"/>`;
+  svg.innerHTML=html;svg.setAttribute('aria-label',`${stage===0?'Input':stage===1?'After V transpose':stage===2?'After Sigma, third coordinate zero':'Output after U'}; selected point [${v.map(x=>gfmt(x)).join(', ')}]. ${three?'Drag to rotate; scroll to zoom.':''}`);
+}
+function drawAllGrid(){
+  if(!isGridMap()||mode!=='grid')return;
+  [0,1,2,3].forEach(drawGridPlot);
+  const stages=selectedStages(),labels=['x ∈ ℝ²','Vᵀx ∈ ℝ²','ΣVᵀx ∈ ℝ³','UΣVᵀx = Bx ∈ ℝ³'];
+  $('#gridReadout').innerHTML=stages.map((v,i)=>`<div><strong>${labels[i]}</strong>[${v.map(x=>gfmt(x)).join(', ')}]</div>`).join('');
+  $('#pointX1').value=selectedI;$('#pointX2').value=selectedJ;$('#pointX1Value').textContent=gfmt(stages[0][0]);$('#pointX2Value').textContent=gfmt(stages[0][1]);
+  $('#yaw').value=camera.yaw;$('#pitch').value=camera.pitch;$('#zoom').value=camera.zoom;$('#yawValue').textContent=`${Math.round(camera.yaw)}°`;$('#pitchValue').textContent=`${Math.round(camera.pitch)}°`;$('#zoomValue').textContent=`${camera.zoom.toFixed(1)}×`;
+}
+function renderGrid(){
+  buildClouds();
+  const titles=['X ⊂ ℝ²','V<sup>T</sup>X ⊂ ℝ²','ΣV<sup>T</sup>X ⊂ ℝ³','UΣV<sup>T</sup>X = BX ⊂ ℝ³'];
+  const names=['01 · Original input','02 · Reorient within ℝ²','03 · Stretch and embed','04 · Reorient within ℝ³'];
+  const notes=['A square grid in the input plane. Each point keeps its original color throughout.','Vᵀ preserves distances and angles. The grid is reoriented within the input space.','Σ stretches the two coordinates and adds a zero third coordinate: w₃ = 0.','U tilts the stretched grid into the column space of B. This is the same grid obtained by applying B directly.'];
+  $('#plots').innerHTML=[0,3,1,2].map(stage=>`<div class="plot" data-panel-stage="${stage}"><div class="plot-heading"><span class="math ${stage===3?'u-color':stage===2?'s-color':'v-color'}">${titles[stage]}</span><small>${names[stage]}</small></div><svg data-grid-stage="${stage}" ${stage>=2?'data-orbit tabindex="0"':''} viewBox="0 0 480 350" role="img"></svg><p class="plot-caption">${notes[stage]}</p></div>`).join('');
+  $('#pointX1').max=gridCount-1;$('#pointX2').max=gridCount-1;drawAllGrid();
+}
+$('#gridDensity').addEventListener('change',()=>{const old=gridCount;gridCount=Number($('#gridDensity').value);selectedI=Math.round(selectedI*(gridCount-1)/(old-1));selectedJ=Math.round(selectedJ*(gridCount-1)/(old-1));renderGrid();});
+for(const id of ['pointX1','pointX2'])$('#'+id).addEventListener('input',()=>{selectedI=Number($('#pointX1').value);selectedJ=Number($('#pointX2').value);drawAllGrid();});
+for(const id of ['yaw','pitch','zoom'])$('#'+id).addEventListener('input',()=>{camera[id]=Number($('#'+id).value);drawAllGrid();});
+$('#resetCamera').addEventListener('click',()=>{camera={yaw:-38,pitch:24,zoom:1};drawAllGrid();});
+$('#plots').addEventListener('pointerdown',e=>{
+  if(mode!=='grid')return;const svg=e.target.closest('svg[data-grid-stage]');if(!svg)return;
+  if(svg.hasAttribute('data-orbit')){e.preventDefault();svg.setPointerCapture(e.pointerId);orbit={svg,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,point:e.target.dataset.point};}
+  else if(e.target.dataset.point!==undefined){const id=Number(e.target.dataset.point);selectedI=id%gridCount;selectedJ=Math.floor(id/gridCount);drawAllGrid();}
+});
+$('#plots').addEventListener('pointermove',e=>{if(!orbit)return;camera.yaw=((camera.yaw+(e.clientX-orbit.x)*.45+540)%360)-180;camera.pitch=Math.max(-80,Math.min(80,camera.pitch+(e.clientY-orbit.y)*.35));orbit.x=e.clientX;orbit.y=e.clientY;drawAllGrid();});
+$('#plots').addEventListener('pointerup',e=>{if(!orbit)return;if(Math.hypot(e.clientX-orbit.startX,e.clientY-orbit.startY)<5&&orbit.point!==undefined){const id=Number(orbit.point);selectedI=id%gridCount;selectedJ=Math.floor(id/gridCount);drawAllGrid();}orbit=null;});
+$('#plots').addEventListener('pointercancel',()=>orbit=null);
+$('#plots').addEventListener('wheel',e=>{if(mode!=='grid'||!e.target.closest('svg[data-orbit]'))return;e.preventDefault();camera.zoom=Math.max(.5,Math.min(3,camera.zoom*Math.exp(-e.deltaY*.001)));drawAllGrid();},{passive:false});
+$('#plots').addEventListener('keydown',e=>{if(mode!=='grid'||!e.target.matches('svg[data-orbit]'))return;const actions={ArrowLeft:()=>camera.yaw-=5,ArrowRight:()=>camera.yaw+=5,ArrowUp:()=>camera.pitch=Math.min(80,camera.pitch+5),ArrowDown:()=>camera.pitch=Math.max(-80,camera.pitch-5),'+':()=>camera.zoom=Math.min(3,camera.zoom+.1),'-':()=>camera.zoom=Math.max(.5,camera.zoom-.1)};if(actions[e.key]){e.preventDefault();actions[e.key]();camera.yaw=((camera.yaw+540)%360)-180;drawAllGrid();}});
+
+
+const visPresets={plane:[1,0,0,2,1,1],line:[1,2,2,4,-1,-2],zero:[0,0,0,0,0,0]};
+const visInputs=()=>$$('#visMatrix input');
+function computeVisualization(){
+  try{const input=visualizationMatrix(visInputs().map(el=>el.value)),decomposition=svd(input);B=input;GD=decomposition;
+    $('#visError').hidden=true;$('#visualizationResults').hidden=false;
+    $('#visStatus').textContent='Computed for B (3 × 2) · rank '+GD.rank+' · singular values '+GD.s.map(v=>fmt(v,3)).join(', ')+'.';
+    $('#geometryNote').textContent=GD.rank===2?'After Σ, every point has third coordinate zero. U reorients that plane into col(B) = span{u₁, u₂}. The image remains two-dimensional, although all three output coordinates can be nonzero. Orthogonal factors can include reflections.':GD.rank===1?'Only one singular value is nonzero. The input grid collapses to a line, and U reorients that line inside ℝ³.':'Both singular values vanish. Every input point maps to the origin in ℝ³.';
+    renderGrid();
+  }catch(e){$('#visError').textContent=e.message;$('#visError').hidden=false;$('#visualizationResults').hidden=true;$('#visStatus').textContent='';}
+}
+$('#computeVisualization').addEventListener('click',computeVisualization);
+visInputs().forEach(el=>{el.addEventListener('input',()=>{$('#visualizationResults').hidden=true;$('#visStatus').textContent='Input edited. Update visualization to apply the new matrix B.';});el.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')computeVisualization();});});
+$('#visPreset').addEventListener('change',()=>{visInputs().forEach((el,i)=>el.value=visPresets[$('#visPreset').value][i]);computeVisualization();});
+$('#showGrid').addEventListener('change',()=>{if(GD)renderGrid();});
+compute();computeVisualization();
+
+
+// BEGIN MOVIE MODEL
+const movieFilms=[{name:'The Matrix',genre:'Science fiction'},{name:'Interstellar',genre:'Science fiction'},{name:'The Notebook',genre:'Romance'},{name:'Toy Story',genre:'Family / animation'},{name:'Finding Nemo',genre:'Family / animation'}];
+const movieUsers=[{name:'Alex',type:'Strong sci-fi'},{name:'Blair',type:'Sci-fi + animation'},{name:'Casey',type:'Strong romance'},{name:'Drew',type:'Romance + animation'},{name:'Emery',type:'Strong family / animation'},{name:'Frankie',type:'Broad tastes'}];
+const movieRatings=[[5,5,1,2,2],[5,4,2,4,4],[2,1,5,2,3],[1,2,5,4,4],[2,3,2,5,5],[4,4,4,4,5]];
+const movieMeans=movieRatings.map(row=>row.reduce((a,b)=>a+b,0)/row.length);
+const movieCentered=movieRatings.map((row,i)=>row.map(v=>z(v-movieMeans[i])));
+const movieSVD=svd(movieCentered);
+function movieContribution(i,j,k){return movieSVD.s[k]*movieSVD.U[i][k].re*movieSVD.V[j][k].re;}
+function movieApproximation(q){return movieRatings.map((row,i)=>row.map((_,j)=>movieMeans[i]+Array.from({length:q},(_,k)=>movieContribution(i,j,k)).reduce((a,b)=>a+b,0)));}
+// END MOVIE MODEL
+let movieK=0,movieQ=2,movieI=0,movieJ=0;
+const movieNum=(v,p=3)=>fmt(v,p);
+const movieSigned=v=>(v>=0?'+':'−')+movieNum(Math.abs(v));
+function movieTable(values,caption,baseline=false){return '<table class="movie-table"><caption>'+caption+'</caption><thead><tr><th scope="col">User / preference profile</th>'+movieFilms.map(f=>'<th scope="col">'+f.name+'<small>'+f.genre+'</small></th>').join('')+(baseline?'<th scope="col">User mean μ<sub>i</sub></th>':'')+'</tr></thead><tbody>'+movieUsers.map((u,i)=>'<tr><th scope="row">'+u.name+'<small>'+u.type+'</small></th>'+values[i].map((v,j)=>'<td'+(i===movieI&&j===movieJ?' class="movie-selected"':'')+'>'+movieNum(v,2)+'</td>').join('')+(baseline?'<td>'+movieNum(movieMeans[i],2)+'</td>':'')+'</tr>').join('')+'</tbody></table>';}
+function renderMovieData(){const centered=$('#movieDataView').value==='centered';$('#movieDataTable').innerHTML=movieTable(centered?movieCentered.map(row=>row.map(v=>v.re)):movieRatings,centered?'C: each rating minus that user’s mean. Rows sum to zero.':'R: fictional ratings on a 1–5 scale. All entries are observed.',true);}
+function movieBars(labels,values){return values.map((v,i)=>'<div class="movie-bar"><span>'+labels[i]+'</span><span class="movie-bar-track" aria-hidden="true"><span class="movie-bar-fill '+(v<0?'negative':'')+'" style="left:'+(v<0?50+v*50:50)+'%;width:'+Math.abs(v)*50+'%"></span></span><strong>'+movieSigned(v)+'</strong></div>').join('');}
+function renderMovieComponent(){const k=movieK,u=movieSVD.U.map(row=>row[k].re),v=movieSVD.V.map(row=>row[k].re),s=movieSVD.s[k];
+ $('#movieVDescription').innerHTML='<span class="movie-vector">v</span><sub>'+(k+1)+'</sub>: five normalized movie weights. Compare signs across movies.';
+ $('#movieUDescription').innerHTML='<span class="movie-vector">u</span><sub>'+(k+1)+'</sub>: six normalized user weights. Multiply by σ to obtain scores.';
+ $('#movieVBars').innerHTML=movieBars(movieFilms.map(f=>f.name),v);$('#movieUBars').innerHTML=movieBars(movieUsers.map(u=>u.name),u);
+ const explanations=['The science-fiction movies have positive weights, while The Notebook and the animated films have negative weights. Alex and Blair have positive user weights; Casey and Drew have negative weights. The paired signs capture their opposing relative preferences.','The Notebook has the largest positive movie weight; the two animated films have negative weights. Casey aligns positively, while Emery aligns strongly negatively. The Matrix also contributes on the positive side, so this is a mixed contrast.','This smaller component distinguishes Interstellar and Toy Story from The Matrix and Finding Nemo. It captures a finer pattern left after the first two components.','The weakest nonzero component captures the remaining variation, including a contrast between Toy Story and Finding Nemo. Small components still matter for exact reconstruction.'];
+ const energy=movieSVD.s.reduce((a,x)=>a+x*x,0);$('#movieComponentFacts').innerHTML='<strong>Component '+(k+1)+' · σ<sub>'+(k+1)+'</sub> = '+movieNum(s)+' · '+movieNum(100*s*s/energy,1)+'% of centered squared variation.</strong><p>'+explanations[k]+'</p><p>For Alex, the movie-direction score is σ<sub>'+(k+1)+'</sub>u<sub>1,'+(k+1)+'</sub> = '+movieNum(s)+' × ('+movieNum(u[0])+') = '+movieNum(s*u[0])+'.</p>';
+ $('#movieOuterProduct').innerHTML='<span class="outer-scalar">'+movieNum(s)+' ×</span>'+matrix(u.map(x=>[z(x)]),'u̲'+(k+1),'u-color')+'<span>×</span>'+matrix([v.map(x=>z(x))],'v̲'+(k+1)+'ᵀ','v-color')+'<span>=</span>'+matrix(outerTerm(movieSVD,k),'σ'+(k+1)+'u̲'+(k+1)+'v̲'+(k+1)+'ᵀ');
+}
+function renderMovieTrace(){const i=movieI,j=movieJ,q=movieQ,approx=movieApproximation(q)[i][j];
+ $('#movieCellTrace').innerHTML='<h3>'+movieUsers[i].name+' × '+movieFilms[j].name+'</h3><p>Original rating: <strong>'+movieRatings[i][j]+'</strong>. User mean: <strong>'+movieNum(movieMeans[i])+'</strong>. Centered rating: <strong>'+movieNum(movieCentered[i][j].re)+'</strong>.</p><ol>'+Array.from({length:movieSVD.rank},(_,k)=>'<li class="'+(k<q?'movie-kept':'movie-omitted')+'">Component '+(k+1)+': σ<sub>'+(k+1)+'</sub>u<sub>'+(i+1)+','+(k+1)+'</sub>v<sub>'+(j+1)+','+(k+1)+'</sub> = '+movieNum(movieSVD.s[k])+' × ('+movieNum(movieSVD.U[i][k].re)+') × ('+movieNum(movieSVD.V[j][k].re)+') = '+movieSigned(movieContribution(i,j,k))+' · '+(k<q?'included':'omitted')+'</li>').join('')+'</ol><p><strong>Reconstructed rating = user mean + included contributions</strong><br>'+movieNum(movieMeans[i])+Array.from({length:q},(_,k)=>' '+movieSigned(movieContribution(i,j,k))).join('')+' = <strong>'+movieNum(approx)+'</strong> (original: '+movieRatings[i][j]+').</p><p class="hint">Calculations use full precision. The displayed rounded factors may not multiply or add exactly to the displayed total.</p>';
+}
+function renderMovieRank(){const approx=movieApproximation(movieQ),total=movieSVD.s.reduce((a,x)=>a+x*x,0),kept=movieSVD.s.slice(0,movieQ).reduce((a,x)=>a+x*x,0),rmse=Math.sqrt(movieRatings.flatMap((row,i)=>row.map((v,j)=>(v-approx[i][j])**2)).reduce((a,b)=>a+b,0)/30);
+ $('#movieRankValue').textContent=movieQ;$('#movieRankStats').textContent='Rank-'+movieQ+' centered approximation · '+movieNum(100*kept/total,1)+'% of centered squared variation retained · rating RMSE '+movieNum(rmse)+'.';
+ $('#movieReconstruction').innerHTML=movieTable(approx,'Reconstructed ratings R̂ with the user means restored. The outlined cell is traced below.');renderMovieTrace();
+}
+function initMovies(){
+ $('#movieComponent').innerHTML=Array.from({length:movieSVD.rank},(_,k)=>'<option value="'+k+'">Component '+(k+1)+' · σ = '+movieNum(movieSVD.s[k])+'</option>').join('');
+ $('#movieUser').innerHTML=movieUsers.map((u,i)=>'<option value="'+i+'">'+u.name+' · '+u.type+'</option>').join('');$('#movieFilm').innerHTML=movieFilms.map((f,j)=>'<option value="'+j+'">'+f.name+'</option>').join('');
+ const r=movieSVD.rank;$('#movieFactorization').innerHTML=matrix(movieCentered,'C')+'<span>=</span>'+matrix(movieSVD.U.map(row=>row.slice(0,r)),'Uᵣ','u-color')+matrix(Array.from({length:r},(_,i)=>Array.from({length:r},(_,j)=>z(i===j?movieSVD.s[i]:0))),'Σᵣ','s-color')+matrix(movieSVD.VH.slice(0,r),'Vᵣᵀ','v-color');
+ $('#movieDataView').addEventListener('change',renderMovieData);$('#movieComponent').addEventListener('change',()=>{movieK=+$('#movieComponent').value;renderMovieComponent();});$('#movieRank').addEventListener('input',()=>{movieQ=+$('#movieRank').value;renderMovieRank();});
+ $('#movieUser').addEventListener('change',()=>{movieI=+$('#movieUser').value;renderMovieData();renderMovieRank();});$('#movieFilm').addEventListener('change',()=>{movieJ=+$('#movieFilm').value;renderMovieData();renderMovieRank();});
+ renderMovieData();renderMovieComponent();renderMovieRank();
+}
+initMovies();
+
+</script></body></html>
