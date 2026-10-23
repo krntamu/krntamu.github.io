@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ECEN 601 lessons and interactive explorations of linear algebra, principal component analysis, PageRank, and constrained optimization.">
+    <meta name="theme-color" content="#146c6a">
+    <title>ECEN 601 · Lessons and interactive explorations</title>
+    <style>
+      :root { color-scheme: light; --ink: #172c36; --muted: #51646d; --teal: #146c6a; --line: #dce4e5; }
+      * { box-sizing: border-box; }
+      html { scroll-padding-top: 24px; }
+      body { margin: 0; background: #f4f6f5; color: var(--ink); font: 18px/1.65 "Segoe UI", Arial, sans-serif; }
+      main { max-width: 1160px; margin: 32px auto; padding: 48px 56px; background: #fff; }
+      a { color: var(--teal); text-underline-offset: 4px; }
+      a:focus-visible { outline: 3px solid #a25622; outline-offset: 5px; }
+      .home { font-size: 16px; }
+      header { margin-top: 36px; }
+      .eyebrow { margin: 0 0 10px; color: var(--teal); font-size: 17px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; }
+      h1, h2, h3, p { margin: 0; }
+      h1 { max-width: 850px; font-size: clamp(34px, 5vw, 54px); font-weight: 650; line-height: 1.15; letter-spacing: -.035em; }
+      .intro { max-width: 760px; margin-top: 20px; color: var(--muted); font-size: 21px; }
+      nav { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 26px; }
+      .start { margin-top: 30px; padding: 20px 24px; background: #f1f7f6; border-left: 3px solid var(--teal); }
+      section { margin-top: 42px; padding-top: 24px; border-top: 2px solid var(--teal); }
+      .section-heading { display: flex; align-items: baseline; gap: 14px; }
+      .number { color: var(--teal); font-size: 16px; }
+      h2 { font-size: 28px; font-weight: 600; line-height: 1.3; letter-spacing: -.02em; }
+      .section-intro { margin-top: 10px; color: var(--muted); }
+      .lessons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 22px 0 0; padding: 0; list-style: none; }
+      .lesson { display: flex; flex-direction: column; align-items: flex-start; height: 100%; padding: 24px; border: 1px solid var(--line); border-radius: 4px; }
+      .kind { margin-bottom: 10px; color: var(--teal); font-size: 14px; font-weight: 600; letter-spacing: .055em; text-transform: uppercase; }
+      h3 { font-size: 22px; font-weight: 600; line-height: 1.35; }
+      .lesson p { margin: 12px 0 20px; color: var(--muted); }
+      .open { margin-top: auto; font-weight: 600; }
+      footer { margin-top: 42px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 16px; }
+      @media (max-width: 700px) {
+        main { margin: 0 auto; padding: 28px 22px; }
+        header { margin-top: 28px; }
+        .lessons { grid-template-columns: 1fr; }
+        .intro { font-size: 19px; }
+        .lesson { padding: 22px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <a class="home" href="../">&larr; K. R. Narayanan's website</a>
+      <header>
+        <p class="eyebrow">ECEN 601</p>
+        <h1>Lessons and interactive explorations</h1>
+        <p class="intro">Build intuition through geometry, work through the mathematics, and experiment with interactive examples.</p>
+        <nav aria-label="Topic groups">
+          <a href="#linear-algebra">Linear algebra</a>
+          <a href="#applications">Applications</a>
+          <a href="#optimization">Optimization</a>
+        </nav>
+      </header>
+      <aside class="start" aria-label="Suggested starting point">
+        <strong>Start with the foundations.</strong> Explore the <a href="fundamentalsubspaces.html">four fundamental subspaces</a>, try the <a href="svd.html">SVD calculator and geometry</a>, then follow the <a href="svd-mathematics.html">constructive proof of SVD</a>.
+      </aside>
+
+      <section id="linear-algebra" aria-labelledby="linear-algebra-title">
+        <div class="section-heading"><span class="number" aria-hidden="true">01</span><h2 id="linear-algebra-title">Linear algebra</h2></div>
+        <p class="section-intro">Understand the spaces and decompositions behind a linear transformation.</p>
+        <ul class="lessons">
+          <li>
+            <article class="lesson">
+              <span class="kind">Foundations · Geometry</span>
+              <h3>The four fundamental subspaces</h3>
+              <p>Connect column spaces, row spaces, and null spaces with their geometric meaning.</p>
+              <a class="open" href="fundamentalsubspaces.html">Explore the subspaces &rarr;</a>
+            </article>
+          </li>
+          <li>
+            <article class="lesson">
+              <span class="kind">SVD · Lesson 01</span>
+              <h3>Singular value decomposition</h3>
+              <p>Compute the SVD of real or complex matrices, visualize a map from two to three dimensions, and explore movie preferences.</p>
+              <a class="open" href="svd.html">Open the calculator and geometry &rarr;</a>
+            </article>
+          </li>
+          <li>
+            <article class="lesson">
+              <span class="kind">SVD · Lesson 02</span>
+              <h3>The mathematics of SVD</h3>
+              <p>Follow a constructive proof using the spectral theorem and fundamental subspaces, with a worked rectangular example.</p>
+              <a class="open" href="svd-mathematics.html">Work through the proof &rarr;</a>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section id="applications" aria-labelledby="applications-title">
+        <div class="section-heading"><span class="number" aria-hidden="true">02</span><h2 id="applications-title">Applications</h2></div>
+        <p class="section-intro">Use linear algebra to find structure in data and rank a network.</p>
+        <ul class="lessons">
+          <li>
+            <article class="lesson">
+              <span class="kind">Data · Projections</span>
+              <h3>Principal component analysis</h3>
+              <p>Generate a two-dimensional Gaussian dataset, rotate a projection, and derive the optimal subspace.</p>
+              <a class="open" href="pca.html">Explore PCA &rarr;</a>
+            </article>
+          </li>
+          <li>
+            <article class="lesson">
+              <span class="kind">Networks · Eigenvectors</span>
+              <h3>PageRank</h3>
+              <p>See how web links become an eigenvector through Markov chains and power iteration.</p>
+              <a class="open" href="pagerank.html">Explore PageRank &rarr;</a>
+            </article>
+          </li>
+        </ul>
+      </section>
+
+      <section id="optimization" aria-labelledby="optimization-title">
+        <div class="section-heading"><span class="number" aria-hidden="true">03</span><h2 id="optimization-title">Optimization</h2></div>
+        <p class="section-intro">Explore how constraints shape an optimization problem.</p>
+        <ul class="lessons">
+          <li>
+            <article class="lesson">
+              <span class="kind">Constraints · Lagrange multipliers</span>
+              <h3>Constrained optimization</h3>
+              <p>Investigate constrained optimization and the geometry of Lagrange multipliers in an interactive explorer.</p>
+              <a class="open" href="lagrange.html">Open the optimization explorer &rarr;</a>
+            </article>
+          </li>
+        </ul>
+      </section>
+      <footer>ECEN 601 · K. R. Narayanan · Texas A&amp;M University</footer>
+    </main>
+  </body>
+</html>
